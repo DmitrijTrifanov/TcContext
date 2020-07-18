@@ -66,7 +66,7 @@
 					<h1>tc-context - TwinCAT ADS Javascript Library</h1>
 				</a>
 				<ul>
-					<li><em>written by Dmitrij Trifanov, at <a href="mailto:&#100;&#x2e;&#118;&#46;&#116;&#114;&#105;&#x66;&#x61;&#110;&#x6f;&#x76;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#100;&#x2e;&#118;&#46;&#116;&#114;&#105;&#x66;&#x61;&#110;&#x6f;&#x76;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#x6f;&#x6d;</a></em></li>
+					<li><em>written by Dmitrij Trifanov, at <a href="mailto:&#x64;&#x2e;&#118;&#x2e;&#116;&#x72;&#x69;&#102;&#x61;&#x6e;&#111;&#118;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x64;&#x2e;&#118;&#x2e;&#116;&#x72;&#x69;&#102;&#x61;&#x6e;&#111;&#118;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a></em></li>
 				</ul>
 				<p><img src="https://img.shields.io/badge/version-1.0.0-orange" alt="version">
 					<a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tcadscommon/html/tcadscommon_intro.htm&amp;id="><img src="https://img.shields.io/badge/TwinCAT-v4024.7-blue" alt="TwinCAT"></a>
@@ -74,7 +74,7 @@
 				<a href="https://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a></p>
 				<p>Unofficial Node.JS Library for TwinCAT ADS Communication, designed to simplify connection to a Beckhoff PLC, and automatically generating a Symbol Map <a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_ads_intro/116157835.html&amp;id=124964102706356243">ADS Protocol</a> from Beckhoff for ease of read/write and subscribe data operations.
 				The <code>tc-context</code> library achieves this by fetching all the type data and initial symbol data at the moment connection and caching the memory locations of each individual symbol, as well as their parent symbol relationship. This grants the possibility to write partial structures directly into TwinCAT <code>Function_Blocks</code> and <code>Structures</code>, subscribing to complex objects, and clearing multiple Namespaces, all with single-line instructions at minimal run-time cost.</p>
-				<p>This library is made possible, thanks to the <a href="https://github.com/jisotalo/ads-client">ads-client</a> library by Jussi Isotalo <a href="mailto:&#x6a;&#46;&#x69;&#115;&#x6f;&#116;&#97;&#108;&#x6f;&#x39;&#49;&#64;&#x67;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;">&#x6a;&#46;&#x69;&#115;&#x6f;&#116;&#97;&#108;&#x6f;&#x39;&#49;&#64;&#x67;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#x6f;&#x6d;</a>. If you are in search for a smaller library, focusing on ADS communication, make sure to check the<a href="https://github.com/jisotalo/ads-client">ads-client</a> library.</p>
+				<p>This library is made possible, thanks to the <a href="https://github.com/jisotalo/ads-client">ads-client</a> library by Jussi Isotalo <a href="mailto:&#x6a;&#x2e;&#x69;&#x73;&#x6f;&#116;&#x61;&#x6c;&#111;&#x39;&#49;&#x40;&#x67;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;">&#x6a;&#x2e;&#x69;&#x73;&#x6f;&#116;&#x61;&#x6c;&#111;&#x39;&#49;&#x40;&#x67;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;</a>. If you are in search for a smaller library, focusing on ADS communication, make sure to check the<a href="https://github.com/jisotalo/ads-client">ads-client</a> library.</p>
 				<a href="#list-of-features" id="list-of-features" style="color: inherit; text-decoration: none;">
 					<h1><a href="#table-of-contents">List of Features</a></h1>
 				</a>
@@ -1460,6 +1460,18 @@ TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
 							<td>When the PLC Code base changes during an active connection</td>
 						</tr>
 						<tr>
+							<td></td>
+							<td><code>connectionLost</code></td>
+							<td><code>TcComConnectionLostEvent</code></td>
+							<td>When the TcCom looses connection to the Target PLC</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>reconnected</code></td>
+							<td><code>TcComReconnectedEvent</code></td>
+							<td>When the TcCom reestablishes the connection to the Target PLC</td>
+						</tr>
+						<tr>
 							<td><code>TcSymbol</code></td>
 							<td><code>set</code></td>
 							<td><code>TcSymbolSetEvent</code></td>
@@ -1856,13 +1868,13 @@ TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
 					<h1><a href="#table-of-contents">Acknowledgments</a></h1>
 				</a>
 				<ul>
-					<li>Jussi Isotalo <a href="mailto:&#x6a;&#46;&#105;&#115;&#x6f;&#x74;&#x61;&#x6c;&#111;&#57;&#49;&#64;&#x67;&#x6d;&#97;&#x69;&#108;&#46;&#x63;&#x6f;&#109;">&#x6a;&#46;&#105;&#115;&#x6f;&#x74;&#x61;&#x6c;&#111;&#57;&#49;&#64;&#x67;&#x6d;&#97;&#x69;&#108;&#46;&#x63;&#x6f;&#109;</a> and his <a href="https://github.com/jisotalo/ads-client">ads-client</a> library</li>
+					<li>Jussi Isotalo <a href="mailto:&#x6a;&#46;&#105;&#115;&#x6f;&#116;&#x61;&#108;&#111;&#57;&#x31;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#x6f;&#109;">&#x6a;&#46;&#105;&#115;&#x6f;&#116;&#x61;&#108;&#111;&#57;&#x31;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#x6f;&#109;</a> and his <a href="https://github.com/jisotalo/ads-client">ads-client</a> library</li>
 				</ul>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h1><a href="#table-of-contents">License</a></h1>
 				</a>
 				<p><em>Licensed under MIT License.</em></p>
-				<p><em>Copyright (c) 2020 Dmitrij Trifanov <a href="mailto:&#100;&#x2e;&#x76;&#x2e;&#x74;&#x72;&#105;&#x66;&#x61;&#110;&#111;&#x76;&#64;&#103;&#109;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;">&#100;&#x2e;&#x76;&#x2e;&#x74;&#x72;&#105;&#x66;&#x61;&#110;&#111;&#x76;&#64;&#103;&#109;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;</a></em></p>
+				<p><em>Copyright (c) 2020 Dmitrij Trifanov <a href="mailto:&#x64;&#46;&#x76;&#46;&#x74;&#114;&#105;&#x66;&#x61;&#110;&#111;&#x76;&#x40;&#103;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;">&#x64;&#46;&#x76;&#46;&#x74;&#114;&#105;&#x66;&#x61;&#110;&#111;&#x76;&#x40;&#103;&#x6d;&#97;&#x69;&#108;&#x2e;&#99;&#111;&#109;</a></em></p>
 				<p><em>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</em></p>
 				<p><em>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</em></p>
 				<p><em>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</em></p>

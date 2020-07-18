@@ -268,6 +268,19 @@ export class TcComDisconnectedEvent extends TcComEvent {}
  */
 export class TcComSourceChangedEvent extends TcComEvent {}
 
+/**
+ * Event, which is emitted, when `TcCom` has a connection loss with the Target PLC
+ */
+export class TcComConnectionLostEvent extends TcComEvent {}
+
+
+/**
+ * Event, which is emitted, when `TcCom` reconnects to the Target PLC
+ */
+export class TcComReconnectedEvent extends TcComEvent {}
+
+
+
 
 /**
  * Derived class for narrowing down event source.
