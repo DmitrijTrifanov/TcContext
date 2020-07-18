@@ -1,6 +1,6 @@
 {
   "name": "tc-context",
-  "version": "1.0.0",
+  "version": "0.0.5",
   "description": "TwinCAT ADS Communication Library for creating an active TwinCAT Context, with automatic symbol and type mapping",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

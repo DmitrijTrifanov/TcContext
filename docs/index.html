@@ -62,10 +62,1810 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#tccontext" id="tccontext" style="color: inherit; text-decoration: none;">
-					<h1>TcContext</h1>
+				<a href="#tc-context---twincat-ads-javascript-library" id="tc-context---twincat-ads-javascript-library" style="color: inherit; text-decoration: none;">
+					<h1>tc-context - TwinCAT ADS Javascript Library</h1>
 				</a>
-				<p>Unofficial Node.JS Library for TwinCAT ADS Communication, designed to simplify connection to a Beckhoff PLC.</p>
+				<ul>
+					<li><em>written by Dmitrij Trifanov, at <a href="mailto:&#100;&#x2e;&#x76;&#46;&#x74;&#114;&#x69;&#102;&#x61;&#110;&#x6f;&#x76;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#x6f;&#109;">&#100;&#x2e;&#x76;&#46;&#x74;&#114;&#x69;&#102;&#x61;&#110;&#x6f;&#x76;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#x6f;&#109;</a></em></li>
+				</ul>
+				<p><img src="https://img.shields.io/badge/version-1.0.0-orange" alt="version">
+					<a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tcadscommon/html/tcadscommon_intro.htm&amp;id="><img src="https://img.shields.io/badge/TwinCAT-v4024.7-blue" alt="TwinCAT"></a>
+					<a href="https://www.npmjs.org/package/ads-client"><img src="https://img.shields.io/badge/npm-v1.7.1-blue" alt="npm version"></a>
+				<a href="https://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/badge/license-MIT-green" alt="License"></a></p>
+				<p>Unofficial Node.JS Library for TwinCAT ADS Communication, designed to simplify connection to a Beckhoff PLC, and automatically generating a Symbol Map <a href="https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_ads_intro/116157835.html&amp;id=124964102706356243">ADS Protocol</a> from Beckhoff for ease of read/write and subscribe data operations.
+				The <code>tc-context</code> library achieves this by fetching all the type data and initial symbol data at the moment connection and caching the memory locations of each individual symbol, as well as their parent symbol relationship. This grants the possibility to write partial structures directly into TwinCAT <code>Function_Blocks</code> and <code>Structures</code>, subscribing to complex objects, and clearing multiple Namespaces, all with single-line instructions at minimal run-time cost.</p>
+				<p>This library is made possible, thanks to the <a href="https://github.com/jisotalo/ads-client">ads-client</a> library by Jussi Isotalo <a href="mailto:&#106;&#46;&#105;&#x73;&#x6f;&#x74;&#x61;&#108;&#x6f;&#57;&#x31;&#64;&#x67;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;">&#106;&#46;&#105;&#x73;&#x6f;&#x74;&#x61;&#108;&#x6f;&#57;&#x31;&#64;&#x67;&#x6d;&#x61;&#x69;&#108;&#x2e;&#x63;&#111;&#x6d;</a>. If you are in search for a smaller library, focusing on ADS communication, make sure to check the<a href="https://github.com/jisotalo/ads-client">ads-client</a> library.</p>
+				<a href="#list-of-features" id="list-of-features" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">List of Features</a></h1>
+				</a>
+				<ul>
+					<li>Generation of a full Symbol Map, from a Beckhoff PLC</li>
+					<li>Reading/writing/clearing/subscribing to non-structured and non-array types</li>
+					<li>Reading/writing/clearing/subscribing to structured types </li>
+					<li>Writing only to explicit members of structured types</li>
+					<li>Reading/writing/clearing/subscribing to array types</li>
+					<li>Reading/Writing/clearing/subscribing to sub-arrays dimension size[<em>n-1</em>] from an initial array of dimension size[<em>n</em>]</li>
+					<li>Invoking Methods from the Beckhoff PLC Side</li>
+					<li>Beckhoff PLC Code Change detection and Symbol Map re-generation</li>
+					<li>Input value validation for all types, including sub-ranged integers</li>
+				</ul>
+				<a href="#table-of-contents" id="table-of-contents" style="color: inherit; text-decoration: none;">
+					<h1>Table of contents</h1>
+				</a>
+				<ul>
+					<li><a href="#list-of-features">List of Features</a></li>
+					<li><a href="#quick-look">Quick Look</a></li>
+					<li><a href="#installation">Installation</a></li>
+					<li><a href="#connection-setup">Connection Setup</a></li>
+					<li><a href="#creating-tccontext-instance">Creating TcContext Instance</a><ul>
+							<li><a href="#tccontext-components">TcContext Components</a></li>
+						</ul>
+					</li>
+					<li><a href="#tcsymbols">TcSymbols</a><ul>
+							<li><a href="#read-write-and-clear-tcsymbol-operations">Read, Write and Clear TcSymbol Operations</a></li>
+							<li><a href="#subscribing-to-tcsymbol-changes">Subscribing to TcSymbol Changes</a><ul>
+									<li><a href="#explicit-sampling-rate">Explicit Sampling Rate</a></li>
+								</ul>
+							</li>
+							<li><a href="#structured-tcsymbols">Structured TcSymbols</a><ul>
+									<li><a href="#method-call-on-structured-tcsymbol">Method call on Structured TcSymbols</a></li>
+									<li><a href="#unions-and-tcsymbols">Unions and TcSymbols</a></li>
+								</ul>
+							</li>
+							<li><a href="#array-tcsymbols">Array TcSymbols</a><ul>
+									<li><a href="#multidimensional-array">Multidimensional Array</a></li>
+								</ul>
+							</li>
+							<li><a href="#tcsymbol-types">TcSymbol Types</a> <ul>
+									<li><a href="#tcbooleansymbol">TcBooleanSymbol</a> </li>
+									<li><a href="#tcnumericsymbol">TcNumericSymbol</a> </li>
+									<li><a href="#tcstringsymbol">TcStringSymbol</a> </li>
+									<li><a href="#tcenumsymbol">TcEnumSymbol</a></li>
+									<li><a href="#tcstructuresymbol">TcStructureSymbol</a></li>
+									<li><a href="#tcarraysymbol">TcArraySymbol</a></li>
+								</ul>
+							</li>
+							<li><a href="#invalidated-tcsymbol">Invalidated TcSymbol</a></li>
+							<li><a href="#tcsymbol-attributes">TcSymbol Attributes</a><ul>
+									<li><a href="#tcsymbol-default-attribute">TcSymbol Default Attribute</a></li>
+									<li><a href="#tcsymbol-readonly-attribute">TcSymbol ReadOnly Attribute</a></li>
+									<li><a href="#tcsymbol-ignore-attribute">TcSymbol Ignore Attribute</a></li>
+									<li><a href="#tcsymbol-event-alias-attribute">TcSymbol Event Alias Attribute</a></li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+					<li><a href="#tcevents">TcEvents</a><ul>
+							<li><a href="#tcevent-list">TcEvent List</a></li>
+							<li><a href="#tcevent-hierarchy">TcEvent Hierarchy</a></li>
+						</ul>
+					</li>
+					<li><a href="#understanding-tccontext-lifecycle">Understanding TcContext Lifecycle</a></li>
+					<li><a href="#tcexceptions">TcExceptions</a></li>
+					<li><a href="#documentation">Documentation</a></li>
+					<li><a href="#acknowledgments">Acknowledgments</a></li>
+					<li><a href="#license">License</a></li>
+				</ul>
+				<a href="#quick-look" id="quick-look" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Quick Look</a></h1>
+				</a>
+				<p>Below is a quick example of creating a <code>TcContext</code> for a Beckhoff PLC located at localhost, and performing read/write/clear operations. For more complex operations, and behavior definitions, see individual chapters on the subject matter.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    <span class="hljs-attr">booleanValue :</span> <span class="hljs-attr">BOOL :</span>= TRUE;
+    <span class="hljs-attr">numericValue :</span> <span class="hljs-attr">INT :</span>= <span class="hljs-number">10</span>;
+    <span class="hljs-attr">structuredValue :</span> Foo;
+    <span class="hljs-attr">arrayValue :</span> ARRAY [<span class="hljs-number">0.</span><span class="hljs-number">.9</span>] OF <span class="hljs-attr">STRING :</span>= [<span class="hljs-string">&#x27;a&#x27;</span>, <span class="hljs-string">&#x27;b&#x27;</span>, <span class="hljs-string">&#x27;c&#x27;</span>, <span class="hljs-string">&#x27;d&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;f&#x27;</span>, <span class="hljs-string">&#x27;g&#x27;</span>, <span class="hljs-string">&#x27;h&#x27;</span>, <span class="hljs-string">&#x27;j&#x27;</span>]
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    <span class="hljs-attr">realValue :</span> REAL;
+    <span class="hljs-attr">stringValue :</span> <span class="hljs-attr">STRING :</span>= <span class="hljs-string">&#x27;hello world&#x27;</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>);
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Reading the program&#x27;s &#x27;MAIN&#x27; Namespace</span>
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.$get
+    <span class="hljs-comment">/**
+     *  result : { 
+     *      booleanValue : true, 
+     *      numericValue : 10, 
+     *      structuredValue : { 
+     *          realValue : 0,
+     *          stringValue : &#x27;hello world&#x27;    
+     *      },
+     *      arrayValue : [&#x27;a&#x27;, &#x27;b&#x27;, &#x27;c&#x27;, &#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;, &#x27;g&#x27;, &#x27;h&#x27;, &#x27;j&#x27;]
+     *  }
+     */</span>
+
+    <span class="hljs-comment">//Clearing all members of a Structured Value</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.structuredValue.$clear()
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.structuredValue.$get;
+    <span class="hljs-comment">/**
+     *  result : { realValue : 0, stringValue : &#x27;&#x27; }
+     */</span>   
+
+    <span class="hljs-comment">//Setting a Numeric value</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$set(<span class="hljs-number">5</span>);
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$get;
+    <span class="hljs-comment">/**
+     *  result : 5
+     */</span>   
+
+    <span class="hljs-comment">//Setting an Array</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue.$set([<span class="hljs-string">&#x27;1&#x27;</span>, <span class="hljs-string">&#x27;2&#x27;</span>, <span class="hljs-string">&#x27;3&#x27;</span>]);
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue.$get;
+    <span class="hljs-comment">/**
+     *  result : [&#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27;, &#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;, &#x27;g&#x27;, &#x27;h&#x27;, &#x27;j&#x27;]
+     */</span>  
+
+    <span class="hljs-comment">//Setting a program&#x27;s Namespace values</span>
+    <span class="hljs-keyword">const</span> set = {
+         <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">false</span>,
+         <span class="hljs-attr">structuredValue</span> : {
+             <span class="hljs-attr">realValue</span> : <span class="hljs-number">15</span>,
+             <span class="hljs-attr">stringValue</span> : <span class="hljs-string">&#x27;i am alive&#x27;</span>
+         }
+
+    }
+    <span class="hljs-keyword">await</span> context.$.MAIN.$set(set)
+    result  = <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue.$get;
+    <span class="hljs-comment">/**
+     *  result : { 
+     *      booleanValue : false, 
+     *      numericValue : 5, 
+     *      structuredValue : { 
+     *          realValue : 15,
+     *          stringValue : &#x27;i am alive&#x27;    
+     *      },
+     *      arrayValue : [&#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27;, &#x27;d&#x27;, &#x27;e&#x27;, &#x27;f&#x27;, &#x27;g&#x27;, &#x27;h&#x27;, &#x27;j&#x27;]
+     *  }
+     */</span>
+
+    <span class="hljs-comment">//Clearing Namespace</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.$clear();
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue.$get;
+    <span class="hljs-comment">/**
+     *  result : { 
+     *      booleanValue : false, 
+     *      numericValue : 0, 
+     *      structuredValue : { 
+     *          realValue : 0,
+     *          stringValue : &#x27;&#x27;    
+     *      },
+     *      arrayValue : [&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;]
+     *  }
+     */</span>
+
+    <span class="hljs-comment">//Disconnecting Context and killing bindings</span>
+    <span class="hljs-keyword">await</span> context.kill()
+
+})</code></pre>
+				<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Installation</a></h1>
+				</a>
+				<p>//TODO : add NPM link</p>
+				<p>Include the module in js:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)</code></pre>
+				<a href="#connection-setup" id="connection-setup" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Connection Setup</a></h1>
+				</a>
+				<p>The <code>tc-context</code> library uses the <a href="https://github.com/jisotalo/ads-client">ads-client</a> library for connecting and communicating with a Beckhoff PLC over the ADS Protocol. Because of that, the connection setup configuration is equal to the <a href="https://github.com/jisotalo/ads-client#connection-setups-and-possibilities">connection setup</a> of the <a href="https://github.com/jisotalo/ads-client">ads-client</a>, since the supplied settings are routed directly to the <code>ads-client</code>.</p>
+				<p>See <a href="https://github.com/jisotalo/ads-client">ads-client</a> for detailed information on different types of possible connections.</p>
+				<a href="#creating-tccontext-instance" id="creating-tccontext-instance" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Creating TcContext Instance</a></h1>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+<span class="hljs-comment">//Connecting to a Localhost Beckhoff PLC</span>
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Result contains the currently active context</span>
+    <span class="hljs-comment">//Perform operation with the created context....</span>
+
+    <span class="hljs-comment">//When done, kill the context</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>In order to create a new <code>TcContext</code> Object, a call to the <code>TcContext.create()</code> functions must be made. By default, if no arguments are passed to the <code>TcContext.create()</code> function, it is assumed to that the connection that will be made is to the localhost located PLC. Explicit settings can be provided as the first argument to the <code>TcContext.create()</code> function.</p>
+				<p><strong><em>NOTE:</em></strong> The <code>TcContext</code> object must be explicitly killed at the end of its use, through the <code>TcContext.kill()</code> method call. This will clean up all subscription handles, termination the connection, and clear the generated map, thus ensuring no memory leaks.</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+<span class="hljs-keyword">const</span> settings = {
+  <span class="hljs-attr">targetAmsNetId</span>: <span class="hljs-string">&#x27;192.168.1.120.1.1&#x27;</span>,
+  <span class="hljs-attr">targetAdsPort</span>: <span class="hljs-number">851</span>
+  <span class="hljs-comment">//And more....</span>
+}
+
+<span class="hljs-comment">//Connecting to a Localhost Beckhoff PLC</span>
+TcContext.create(settings).then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Result contains the currently active context for 192.168.1.120.1.1:851</span>
+    <span class="hljs-comment">//Perform operation with the created context....</span>
+
+    <span class="hljs-comment">//When done, kill the context</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>The settings are routed to the <a href="https://github.com/jisotalo/ads-client">ads-client</a> <code>Client.connect()</code> method directly, without any modification. Hence, for more detailed and up-to-date information, on different connection patters, see the official documentation of <a href="https://github.com/jisotalo/ads-client">ads-client</a>.</p>
+				<a href="#tccontext-components" id="tccontext-components" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">TcContext Components</a></h2>
+				</a>
+				<p>The <code>TcContext</code> Object is composed of 3 Components :</p>
+				<ul>
+					<li><code>TcSymbolRegistry</code> - Storage for all the Symbol Maps created based based on the data gathered by <code>TcCom</code>&#39;, passed through the <code>TcTypeRegistry</code>. This property can be accessed by the <code>TcContext.symbols</code> property, and the registered symbol maps can be accessed by the <code>TcContext.symbols.namespaces</code> property. The <code>TcSymbolNamespace</code> represents the Programs and any Global Variable Lists present in the PLC.<br><strong><em>Note:</em></strong> Because access to the symbol namespaces is a common operation, a shortcut is implemented in the form of <code>TcContext.$</code>, which corresponds to <code>TcContext.symbols.namespaces</code></li>
+					<li><code>TcTypeRegistry</code> - Storage for all the processed types, which are gathered by <code>TcCom</code> Component. This component can be accessed through <code>TcContext.types</code> property, and the registered types can be queried by <code>TcContext.types.has(&lt;type name&gt;)</code>.<br><strong><em>Note:</em></strong> Type names are case sensitive. </li>
+					<li><code>TcCom</code> - Component responsible for communication and data passing between <code>TcContext</code> and the PLC. This component can be accessed through <code>TcContext.COM</code> property.</li>
+				</ul>
+				<a href="#tcsymbols" id="tcsymbols" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">TcSymbols</a></h1>
+				</a>
+				<p>Upon a successful <code>TcContext</code> creation, a full <code>TcSymbol</code> map is created, mirroring what is currently loaded in the Beckhoff PLC. The create <code>TcSymbolNamespaces</code> can be accessed either through <code>TcContext.symbols.namespaces</code> or <code>TcContext.$</code> properties.
+				In order to avoid naming conflicts with symbols declared in the PLC, all public methods provided by the <code>TcSymbol</code> Object begin with ``$` symbol. </p>
+				<p><strong><em>IMPORTANT:</em></strong> Type safety is important and there is <strong>no implicit type conversion</strong>. This is to ensure, that whatever is written is well defined by both ends of the system. In case of type mismatch, an exception <code>TcBindingInvalidTypeException</code> is raised and no operation is performed.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    <span class="hljs-built_in">bool</span>eanValue : BOOL;
+    numericValue : INT;
+    rangeValue : BYTE(<span class="hljs-number">50.</span><span class="hljs-number">.100</span>);
+    <span class="hljs-built_in">string</span>Value : STRING(<span class="hljs-number">50</span>);
+    enumValue : MyEnum;
+    <span class="hljs-built_in">array</span>Value : ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.4</span>] OF Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;Default&#x27;</span> := <span class="hljs-string">&#x27;22.3&#x27;</span>}
+    realValue : <span class="hljs-type">REAL</span>;
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;ReadOnly&#x27;</span>}
+    stringValue : STRING;
+
+END_VAR</code></pre><p><em>MyEnum(ENUM)</em></p>
+				<pre><code>TYPE <span class="hljs-attr">MyEnum :</span>
+(
+    <span class="hljs-attr">member1 :</span>= <span class="hljs-number">0</span>,
+    <span class="hljs-attr">member2 :</span>= <span class="hljs-number">1</span>,
+    <span class="hljs-attr">member3 :</span>= <span class="hljs-number">2</span>
+);
+END_TYPE</code></pre><p>The example above would produce a <code>TcContext</code> of the following type: </p>
+				<ul>
+					<li><code>TcContext.$.MAIN</code> - the MAIN Program<ul>
+							<li><code>.booleanValue</code> - symbol of type <code>TcBooleanSymbol : TcSymbol</code></li>
+							<li><code>.numericValue</code> - symbol of type <code>TcNumericSymbol : TcSymbol</code></li>
+							<li><code>.rangeValue</code> - symbol of type <code>TcNumericSymbol : TcSymbol</code> with explicit value borders at <code>[50-100]</code>, and a write of a value outside these borders raises the <code>TcBindingOutOfRangeException</code> exception</li>
+							<li><code>.stringValue</code> - symbol of type <code>TcStringSymbol : TcSymbol</code>, with a max length of <code>[50]</code> characters, and any attempt to write a string of <code>[50+]</code> length raises the <code>TcBindingOutOfRangeException</code> exception</li>
+							<li><code>.enumValue</code> - symbol of type <code>TcEnumSymbol : TcSymbol</code>, which only accepts input strings from <code>[&#39;MyEnum.member1&#39;, &#39;MyEnum.member2&#39;, &#39;MyEnum.member3&#39;]</code> list, and any write of value outside that list raises the <code>TcBindingOutOfRangeException</code> exception</li>
+							<li><code>.arrayValue</code> - symbol of type <code>TcArraySymbol : TcSymbol</code>, which represents an array of size <code>[5]</code> of type <code>Foo</code> type <code>Function_Block</code> <ul>
+									<li><code>[0-4]</code> - symbols of type <code>TcStructureSymbol : TcSymbol</code><ul>
+											<li><code>.realValue</code> - symbol of type <code>TcNumericSymbol : TcSymbol</code>, with an explicit default value of <code>22.3</code>, which will be set, when ``TcSymbol.$clear()` is called</li>
+											<li><code>.stringValue</code> - symbol of type <code>TcStringSymbol : TcSymbol</code>, which is set to <code>ReadOnly</code>, thus any call to <code>TcSymbol.$clear()</code> or <code>TcSymbol.$set()</code> results in an exception <code>TcBindingReadOnlyException</code>, as well as a call to <code>.stringValue</code> parent <code>TcSymbol.$clear()</code> method will ignore this symbol</li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Exception TcBindingOutOfRangeException</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.rangeValue.$set(<span class="hljs-number">10</span>) 
+
+    <span class="hljs-comment">//MAIN.enumValue is set to 1</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$set(<span class="hljs-string">&#x27;MyEnum.member2&#x27;</span>)
+
+    <span class="hljs-comment">//Exception TcBindingReadOnlyException</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue[<span class="hljs-number">0</span>].stringValue.$set(<span class="hljs-string">&#x27;hello world&#x27;</span>) 
+
+    <span class="hljs-comment">//For [0-4] all the .realValue members are set to 22.3 </span>
+    <span class="hljs-comment">//while .stringValue member is left untouched</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.arrayValue.$clear() 
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>The <code>tc-context</code> library currently supports all of the TwinCAT Data Types, <strong>with the exception of</strong>:</p>
+				<ul>
+					<li>Pointers</li>
+					<li>References</li>
+					<li>Interfaces</li>
+					<li>Arrays of the above mentioned types</li>
+				</ul>
+				<p><strong><em>NOTE:</em></strong> The <code>TcContext</code> Object filters out unsupported members, when generating Symbol Maps. If the end result of a <code>Structure</code>, <code>Funtion_Block</code> or <code>Array</code>, is a Symbol with no Children, no mapping will be created for that Object as well.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    booleanValue : BOOL;
+    filteredFB : Foo;
+    filteredArr : <span class="hljs-keyword">ARRAY</span>[<span class="hljs-number">0</span>..<span class="hljs-number">9</span>] <span class="hljs-keyword">OF</span> REFERENCE <span class="hljs-keyword">TO</span> Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    <span class="hljs-built_in">ptr</span>: POINTER <span class="hljs-keyword">TO</span> <span class="hljs-built_in">INT</span><span class="hljs-comment">;</span>
+    ref : REFERENCE <span class="hljs-keyword">TO</span> BYTE<span class="hljs-comment">;</span>
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//booleanValue is defined</span>
+    <span class="hljs-keyword">const</span> booleanValue = context.$.MAIN.booleanValue 
+
+    <span class="hljs-comment">//filteredFB is undefined</span>
+    <span class="hljs-keyword">const</span> filteredFB = context.$.MAIN.filteredFB 
+
+    <span class="hljs-comment">//filteredArr is undefined</span>
+    <span class="hljs-keyword">const</span> filteredArr = context.$.MAIN.filteredArr 
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#read-write-and-clear-tcsymbol-operations" id="read-write-and-clear-tcsymbol-operations" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">Read, Write and Clear TcSymbol Operations</a></h2>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-attr">PROGRAM</span> <span class="hljs-string">MAIN</span>
+<span class="hljs-attr">VAR</span>
+
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-string">BOOL;</span>
+    <span class="hljs-attr">numericValue</span> : <span class="hljs-string">INT;</span>
+    <span class="hljs-attr">stringValue</span> : <span class="hljs-string">STRING(50);</span>
+    <span class="hljs-attr">enumValue</span> : <span class="hljs-string">MyEnum;</span>
+
+<span class="hljs-attr">END_VAR</span></code></pre><p><em>MyEnum(ENUM)</em></p>
+				<pre><code>TYPE <span class="hljs-attr">MyEnum :</span>
+(
+    <span class="hljs-attr">member1 :</span>= <span class="hljs-number">0</span>,
+    <span class="hljs-attr">member2 :</span>= <span class="hljs-number">1</span>,
+    <span class="hljs-attr">member3 :</span>= <span class="hljs-number">2</span>
+);
+END_TYPE</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Returns the current value of MAIN.booleanValue</span>
+    <span class="hljs-keyword">const</span> booleanValue = <span class="hljs-keyword">await</span> context.$.MAIN.booleanValue.$get 
+
+    <span class="hljs-comment">//Sets the value of MAIN.booleanValue</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.booleanValue.$set(<span class="hljs-literal">true</span>); 
+
+    <span class="hljs-comment">//Sets the value of MAIN.enumValue to MyEnum.member2 (1) and then read it back</span>
+    <span class="hljs-keyword">const</span> enumValue = <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$set(<span class="hljs-string">&#x27;MyEnum.member2&#x27;</span>)
+        .then(<span class="hljs-function">() =&gt;</span> context.$.MAIN.enumValue.$get ) 
+
+    <span class="hljs-keyword">if</span> (enumValue === <span class="hljs-string">&#x27;MyEnum.member2&#x27;</span>) {
+        <span class="hljs-comment">//Clears the MAIN.enumValue to MyEnum.member1 (0)</span>
+        <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$clear() 
+    }
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>The <code>TcSymbol</code> Object supports the following data operations:</p>
+				<ul>
+					<li><p><code>$set(val)</code> - method for writing a value to the Binding of the <code>TcSymbol</code> Object. </p>
+						<ul>
+							<li>when <code>Promise</code> is fulfilled, it returns the value, which was successfully written to the <code>TcSymbol</code>. </li>
+							<li>when <code>Promise</code> is rejected, returns a <code>TcException</code> Type Object, with information regarding the error</li>
+						</ul>
+					</li>
+					<li><p><code>$get</code> - property for reading the value of the <code>TcSymbol</code> Object Binding. </p>
+						<ul>
+							<li>when <code>Promise</code> is fulfilled, it returns the value, which was successfully read from the <code>TcSymbol</code>. </li>
+							<li>when <code>Promise</code> is rejected, returns a <code>TcException</code> Type Object, with information regarding the error</li>
+						</ul>
+					</li>
+					<li><p><code>$clear()</code> - method for clearing the Binding of the <code>TcSymbol</code> based on either its default value, or the explicitly specified <code>Default</code> Attribute value</p>
+						<ul>
+							<li>when <code>Promise</code> is fulfilled, clearing has successfully completed</li>
+							<li>when <code>Promise</code> is rejected, returns a <code>TcException</code> Type Object, with information regarding the error</li>
+						</ul>
+					</li>
+				</ul>
+				<a href="#subscribing-to-tcsymbol-changes" id="subscribing-to-tcsymbol-changes" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">Subscribing to TcSymbol Changes</a></h2>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-attr">PROGRAM</span> <span class="hljs-string">MAIN</span>
+<span class="hljs-attr">VAR</span>
+
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-string">BOOL;</span>
+    <span class="hljs-attr">numericValue</span> : <span class="hljs-string">INT;</span>
+    <span class="hljs-attr">stringValue</span> : <span class="hljs-string">STRING(50);</span>
+    <span class="hljs-attr">foo</span> : <span class="hljs-string">Foo;</span>
+
+<span class="hljs-attr">END_VAR</span></code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    <span class="hljs-built_in">bool</span>eanValue : BOOL;
+    <span class="hljs-built_in">array</span>Value : ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.9</span>] OF INT;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Activate on-change detection</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$subscribe()
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$subscribe()
+
+    <span class="hljs-comment">//Attach event handlers</span>
+    context.$.MAIN.numericValue.$on(<span class="hljs-string">&#x27;changed&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Boolean Value has changed to <span class="hljs-subst">${e.data}</span>`</span>);
+    })
+
+    context.$.MAIN.foo.$on(<span class="hljs-string">&#x27;changed&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`{ 
+            booleanValue : <span class="hljs-subst">${e.data.booleanValue}</span>, 
+            arrayValue : <span class="hljs-subst">${e.data.arrayValue.toString()}</span>
+        }`</span>)
+    })
+
+
+    <span class="hljs-comment">//When no longer change detection is needed, disable it</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$unsubscribe();
+
+    <span class="hljs-comment">//Subscribe to an array.</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.arrayValue.$subscribe();
+    context.$.MAIN.foo.arrayValue.$on(<span class="hljs-string">&#x27;changed&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(e.data.toString())
+    })
+
+    <span class="hljs-comment">//Explicit TcContext kill call will also </span>
+    <span class="hljs-comment">//automatically unsubscribe all active change subscriptions</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p><code>TcSymbol</code> Objects are capable of subscribing to a data <code>changed</code> event of type <code>TcSymbolChangeEvent</code>. When subscribed, if the PLC symbol changes its value, any handlers, which were attached, will be invoked. To subscribe <code>TcSymbol.$subscribe()</code> must be called, and to disable change detection <code>TcSymbol.$unsubscribe()</code> is called. Handlers are added to the <code>TcSymbol</code> by way of calling <code>TcSymbol.$on(...)</code> and <code>TcSymbol.$once(...)</code> and are removed through <code>TcSymbol.$off(...)</code>. When unsubscribing, event handlers are <strong>not removed</strong>, they are simply ignored.</p>
+				<p>When subscribing to <code>Structures</code>,<code>Function_Blocks</code> and <code>Arrays</code>, any change that happens to the data of that symbol, will also result in the <code>changed</code> event. This includes change in symbol that are not supported.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code><span class="hljs-string">FUNCTION_BLOCK</span> <span class="hljs-string">Foo</span>
+<span class="hljs-string">VAR</span>
+
+    <span class="hljs-attr">booleanValue :</span> <span class="hljs-string">BOOL</span> <span class="hljs-string">:=</span> <span class="hljs-literal">FALSE</span><span class="hljs-string">;</span>
+    <span class="hljs-attr">ptr :</span> <span class="hljs-string">POINTER</span> <span class="hljs-string">TO</span> <span class="hljs-string">STRING;</span>
+    <span class="hljs-attr">bar :</span> <span class="hljs-string">Bar</span>
+
+<span class="hljs-string">END_VAR</span></code></pre><p><em>Bar(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Bar
+<span class="hljs-built_in">VAR</span>
+
+    numericValue <span class="hljs-symbol">:</span> <span class="hljs-built_in">INT</span> <span class="hljs-symbol">:</span>= <span class="hljs-number">5</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Activate on-change detection</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$subscribe()
+
+    <span class="hljs-comment">//Attach event handlers</span>
+    context.$.MAIN.foo.$on(<span class="hljs-string">&#x27;changed&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(e.data);
+    }
+
+    <span class="hljs-comment">//Hypothetical scenario of indefinite run-time</span>
+
+    <span class="hljs-comment">//When hypothetical scenario is finished</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>In the example above, a <code>TcSymbol.$subscribe()</code> is activated on <code>MAIN.foo</code>, which would mean, any change happening in <code>MAIN.foo</code> will invoke the <code>changed</code> event. When <code>MAIN.foo.booleanValue</code> changes from <em>FALSE</em> to <em>TRUE</em>, the <code>TcEvent.data</code> will contain an output:</p>
+				<pre><code class="language-js">{
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">bar</span> : {
+        <span class="hljs-attr">numericValue</span> : <span class="hljs-number">5</span>
+    }
+}</code></pre>
+				<p>Following the previous scenario, if <code>MAIN.foo.bar.numericValue</code> has a change from <em>5</em> to <em>10</em>, this will also produce the <code>changed</code> event, with the following output:</p>
+				<pre><code class="language-js">{
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">bar</span> : {
+        <span class="hljs-attr">numericValue</span> : <span class="hljs-number">10</span>
+    }
+}</code></pre>
+				<p>Lastly, even though <code>MAIN.foo.ptr</code> is not supported, and a binding to it is not created, it is still part of the data layout of <code>MAIN.foo</code> Symbol. It is because of this a change to the pointer value (<em>not what its pointing to</em>), will also produce a <code>changed</code> event, with the following output (The 2 previous examples have happened) :</p>
+				<pre><code class="language-js">{
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">bar</span> : {
+        <span class="hljs-attr">numericValue</span> : <span class="hljs-number">10</span>
+    }
+}</code></pre>
+				<a href="#explicit-sampling-rate" id="explicit-sampling-rate" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">Explicit Sampling Rate</a></h3>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-function"><span class="hljs-keyword">PROGRAM</span></span> MAIN
+VAR
+
+    numericValue : <span class="hljs-built_in">INT</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Subscribe with a sampling rate of 1s</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$subscribe(<span class="hljs-number">1000</span>)
+
+    <span class="hljs-comment">//Attach event handlers</span>
+    context.$.MAIN.numericValue.$on(<span class="hljs-string">&#x27;changed&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(e.data);
+    }
+
+    <span class="hljs-comment">//When hypothetical scenario is finished</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>For Symbols, the value of which changes rapidly, and detection of the change each time would either be too costly or unneeded, it is possible to explicitly set the sampling rate in milliseconds, as the argument for <code>TcSymbol.$subscribe()</code>. This will keep any changes of the Symbol from emitting <code>changed</code> event between the sampling period.</p>
+				<a href="#structured-tcsymbols" id="structured-tcsymbols" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">Structured TcSymbols</a></h2>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code><span class="hljs-attr">FUNCTION_BLOCK</span> <span class="hljs-string">Foo</span>
+<span class="hljs-attr">VAR</span>
+
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-string">BOOL;</span>
+    <span class="hljs-attr">numericValue</span> : <span class="hljs-string">INT;</span>
+    <span class="hljs-attr">stringValue</span> : <span class="hljs-string">STRING;</span>
+    <span class="hljs-attr">bar</span> : <span class="hljs-string">Bar</span>
+
+<span class="hljs-attr">END_VAR</span></code></pre><p><em>Bar(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK <span class="hljs-keyword">Bar
+</span>VAR
+
+    numericValue : INT;
+    <span class="hljs-keyword">booleanValue </span>: <span class="hljs-keyword">BOOL;
+</span>
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$set({ <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">true</span>, <span class="hljs-attr">numericValue</span> : <span class="hljs-number">10</span>});
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.foo.$get;
+    <span class="hljs-comment">/**
+     * result : {
+     *      booleanValue : true
+     *      numericValue : 10
+     *      stringValue : &#x27;&#x27;
+     *      bar : {
+     *          numericValue : 0
+     *          booleanValue : false
+     *      }
+     * }
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$set({ 
+        <span class="hljs-attr">stringValue</span> : <span class="hljs-string">&#x27;hello world&#x27;</span>
+        <span class="hljs-attr">bar</span> : {
+            <span class="hljs-attr">numericValue</span> : <span class="hljs-number">15</span>,
+            <span class="hljs-attr">booleanValue</span> : <span class="hljs-literal">true</span>
+        }    
+    })
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.foo.$get;
+    <span class="hljs-comment">/**
+     * result : {
+     *      booleanValue : true
+     *      numericValue : 10
+     *      stringValue : &#x27;hello world&#x27;
+     *      bar : {
+     *          numericValue : 15
+     *          booleanValue : true
+     *      }
+     * }
+     */</span>
+
+    <span class="hljs-comment">//Writing to a non existent child, will result in an exception</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$set({ <span class="hljs-attr">nonExistent</span> : <span class="hljs-number">56.6</span> })
+        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+    <span class="hljs-comment">/**
+     * TcBindingOutOfRangeException : ....
+     */</span>
+
+    context.$.MAIN.foo.bar.$each(<span class="hljs-function"><span class="hljs-params">symbol</span> =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(symbol.$binding.path)
+    })
+    <span class="hljs-comment">/**
+     * Output :
+     *  MAIN.foo.bar.numericValue
+     *  MAIN.foo.bar.booleanValue
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$clear();
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.foo.$get;
+    <span class="hljs-comment">/**
+     * result : {
+     *      booleanValue : false
+     *      numericValue : 0
+     *      stringValue : &#x27;&#x27;
+     *      bar : {
+     *          numericValue : 0
+     *          booleanValue : false
+     *      }
+     * }
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p><code>TcSymbol</code> Objects are capable of operating on <code>Structures</code> and <code>Function_Blocks</code>. For <code>TcContext</code> both <code>Structures</code> and <code>Function_Blocks</code> are treated equally as structures of data. It is possible to write only explicit parts of a <code>TcSymbol</code> symbol, bound to a <code>Structure</code> or <code>Function_Block</code></p>
+				<p>Calling <code>TcSymbol.$clear()</code> will clear all the members of the <code>Structure</code> or <code>Function_Block</code>, with the only exception of <strong>ignoring any child marked with</strong> <strong><em>{attribute &#39;ReadOnly&#39;}</em></strong>.
+				By calling <code>TcSymbol.$get</code> property, a full data-map of all nested-children is returned, with the exception of symbol marked with <strong><em>{attribute &#39;Ignore&#39;}</em></strong></p>
+				<p>When writing to a child, which is not part of <code>TcSymbol</code>, the operation will result in an exception of type <code>TcBindingOutOfRangeException</code>.</p>
+				<a href="#method-call-on-structured-tcsymbols" id="method-call-on-structured-tcsymbols" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">Method call on Structured TcSymbols</a></h3>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+<span class="hljs-keyword">VAR</span>
+
+    booleanValue : BOOL;
+
+END_VAR
+
+<span class="hljs-comment">{attribute &#x27;TcRpcEnable&#x27;}</span>
+<span class="hljs-function"><span class="hljs-keyword">METHOD</span> <span class="hljs-title">basicTask</span> :</span> INT
+VAR_INPUT
+    lhs : INT,
+    rhs : INT
+END_VAR
+
+basicTask := lhs + rhs;
+
+<span class="hljs-comment">{attribute &#x27;TcRpcEnable&#x27;}</span>
+<span class="hljs-function"><span class="hljs-keyword">METHOD</span> <span class="hljs-title">complexTask</span> :</span> BOOL
+VAR_INPUT
+    lhs : INT;
+    rhs : INT;
+END_VAR
+VAR_OUTPUT
+    sum : INT;
+    diff : INT;
+END_VAR
+
+complexTask := <span class="hljs-keyword">TRUE</span>;
+sum := lhs + rhs;
+diff := lhs - rhs;</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">const</span> basicTask = <span class="hljs-keyword">await</span> context.$.MAIN.foo.basicTask({ <span class="hljs-attr">lhs</span> : <span class="hljs-number">10</span>, <span class="hljs-attr">rhs</span> : <span class="hljs-number">15</span> });
+    <span class="hljs-comment">/**
+     * basicTask : {
+     *      result : 25
+     * }
+     */</span>
+
+    <span class="hljs-keyword">const</span> complexTask = <span class="hljs-keyword">await</span> context.$.MAIN.foo.complexTask({ <span class="hljs-attr">lhs</span> : <span class="hljs-number">15</span>, <span class="hljs-attr">rhs</span> : <span class="hljs-number">10</span> });
+    <span class="hljs-comment">/**
+     * basicTask : {
+     *      result : 25
+     *      outputs : {
+     *          sum : 25,
+     *          diff : 5
+     *      }
+     * }
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>It is possible to invoke RPC Methods, marked with <code>{attribute &#39;TcRpcEnable&#39;}</code>, on the PLC Side through the <code>TcContext</code>. Upon completion, a Javascript Object is returned with a field <code>result</code>, which contains the return value of the method call.
+				If the method has <code>VAR_OUTPUT</code> variables, the return of the method call will also contain <code>outputs</code> field, which store the values.</p>
+				<p><strong><em>NOTE:</em></strong> As of now, no type checking is performed when passing values to the method call, it is a direct route to the <a href="https://github.com/jisotalo/ads-client">ads-client</a>. See official documentation for the limitations of Rpc Method calls. This is important when dealing with <code>enumerators</code>. When writing and reading <code>enumerators</code> directly, their type is included, however when passing them to a Rpc Method, the type name of the enum must be omitted.</p>
+				<p>If the method call fails, exceptions of type <code>TcComIsInvalidException</code> or <code>TcComMethodCallException</code> are raised.</p>
+				<a href="#unions-and-tcsymbols" id="unions-and-tcsymbols" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">Unions and TcSymbols</a></h3>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    myUnion : MyUnion;
+
+END_VAR</code></pre><p><em>MyUnion(UNION)</em></p>
+				<pre><code><span class="hljs-keyword">TYPE</span> <span class="hljs-type">DUT </span>:
+UNION
+
+    a : <span class="hljs-type">LREAL</span>;
+    b : <span class="hljs-type">LINT</span>;
+    c : <span class="hljs-type">WORD</span>;
+
+END_UNION
+END_TYPE</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.myUnion.$get
+    <span class="hljs-comment">/**
+     * result : {
+     *      a : 0,
+     *      b : 0,
+     *      c : 0
+     *  }
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.myUnion.c.$set(<span class="hljs-number">10</span>)
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.myUnion.$get
+    <span class="hljs-comment">/**
+     * result : {
+     *      a : 4.94065645841247E-323,
+     *      b : 10,
+     *      c : 10
+     *  }
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p><code>UNIONs</code> are considered Structured symbols in the <code>tc-context</code> library, and are accessed and manipulated the same way as Structured <code>TcSymbols</code>.</p>
+				<a href="#array-tcsymbols" id="array-tcsymbols" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">Array TcSymbols</a></h2>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    arr : <span class="hljs-keyword">ARRAY</span>[<span class="hljs-number">0</span>..<span class="hljs-number">4</span>] <span class="hljs-keyword">OF</span> BOOLEAN;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.arr.$set([<span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>, <span class="hljs-literal">true</span>]);
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.arr.$get;
+    <span class="hljs-comment">/**
+     * result : [true, true, true, false, false]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.arr.$clear();
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr.$get;
+    <span class="hljs-comment">/**
+     * result : [false, false, false, false, false]
+     */</span>   
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.arr[<span class="hljs-number">3</span>].$set(<span class="hljs-literal">true</span>);
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr[<span class="hljs-number">3</span>].$get;
+    <span class="hljs-comment">/**
+     * result : true
+     */</span>
+
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr.$get;
+    <span class="hljs-comment">/**
+     * result : [false, false, true, false, false]
+     */</span>   
+
+    context.$.MAIN.arr.$each(<span class="hljs-function"><span class="hljs-params">symbol</span> =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(symbol.$binding.name)
+    })
+    <span class="hljs-comment">/**
+     * Output :
+     *  arr[0]
+     *  arr[1]
+     *  arr[2]
+     *  arr[3]
+     *  arr[4]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>The <code>TcContext</code>is capable of generating a <code>TcSymbol</code> for TwinCAT array types, allowing for reading, writing, clearing and subscribing operations on the array as a whole, as well as accessing individual members through the subscript operator.
+				<strong><em>NOTE:</em></strong> The indexes of <code>TcSymbol</code> array are synchronized with the TwinCAT array indexes. This means the starting index of a <code>TcSymbol</code> of an <code>array</code> is that of the starting symbol of the TwinCAT <code>array</code>.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+<span class="hljs-keyword">VAR</span>
+
+    arr1 : <span class="hljs-keyword">ARRAY</span>[<span class="hljs-number">0.</span><span class="hljs-number">.4</span>] OF <span class="hljs-keyword">INT</span>;
+    arr2 : <span class="hljs-keyword">ARRAY</span>[<span class="hljs-number">1.</span><span class="hljs-number">.5</span>] OF <span class="hljs-keyword">INT</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-built_in">console</span>.log({ 
+        <span class="hljs-attr">startIndex</span> : context.$.MAIN.arr1.$startIndex,
+        <span class="hljs-attr">length</span> : context.$.MAIN.arr1.$length
+    })
+    <span class="hljs-comment">/**
+     * Output : { startIndex : 0, length : 5 }
+     */</span>
+
+    <span class="hljs-built_in">console</span>.log({ 
+        <span class="hljs-attr">startIndex</span> : context.$.MAIN.arr2.$startIndex,
+        <span class="hljs-attr">length</span> : context.$.MAIN.arr2.$length
+    })
+    <span class="hljs-comment">/**
+     * Output : { startIndex : 1, length : 5 }
+     */</span>
+
+    context.$.MAIN.arr1.$each(<span class="hljs-function">(<span class="hljs-params">symbol, index</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log({ index, <span class="hljs-attr">name</span> : symbol : symbol.$binding.key})
+    })
+    <span class="hljs-comment">/**
+     * Output :
+     *  { index : 0, symbol : arr1[0]}
+     *  { index : 1, symbol : arr1[1]}
+     *  { index : 2, symbol : arr1[2]}
+     *  { index : 3, symbol : arr1[3]}
+     *  { index : 4, symbol : arr1[4]}
+     */</span>
+
+    context.$.MAIN.arr2.$each(<span class="hljs-function">(<span class="hljs-params">symbol, index</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log({ index, <span class="hljs-attr">name</span> : symbol : symbol.$binding.key})
+    })
+    <span class="hljs-comment">/**
+     * Output :
+     *  { index : 1, symbol : arr1[1]}
+     *  { index : 2, symbol : arr1[2]}
+     *  { index : 3, symbol : arr1[3]}
+     *  { index : 4, symbol : arr1[4]}
+     *  { index : 5, symbol : arr1[5]}
+     */</span>
+
+    <span class="hljs-comment">//elem is undefined</span>
+    <span class="hljs-keyword">const</span> elem = context.$.MAIN.arr2[<span class="hljs-number">0</span>];
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#multidimensional-array" id="multidimensional-array" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">Multidimensional Array</a></h3>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    arr1 : ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.2</span>, <span class="hljs-number">0.</span><span class="hljs-number">.2</span>] OF INT;
+    arr2 : ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.2</span>] OF ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.2</span>] OF INT;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.arr1.$get;
+    <span class="hljs-comment">/**
+     * result : [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+     */</span>
+
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr1[<span class="hljs-number">1</span>].$get;
+    <span class="hljs-comment">/**
+     * result : [0, 0, 0]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.arr2[<span class="hljs-number">2</span>].$set([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])    
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr2.$get;
+    <span class="hljs-comment">/**
+     * result : [[0, 0, 0], [0, 0, 0], [1, 2, 3]]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.arr1[<span class="hljs-number">1</span>][<span class="hljs-number">1</span>].$set(<span class="hljs-number">10</span>);
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr1[<span class="hljs-number">1</span>].$get;
+    <span class="hljs-comment">/**
+     * result : [0, 10, 0]
+     */</span>
+
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr2.$clear()
+        .then(<span class="hljs-function">() =&gt;</span> context.$.MAIN.arr2.$get)
+    <span class="hljs-comment">/**
+     * result : [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+     */</span>
+
+    result = <span class="hljs-keyword">await</span> context.$.MAIN.arr1[<span class="hljs-number">1</span>].$clear()
+        .then(<span class="hljs-function">() =&gt;</span> context.$.MAIN.arr1.$get)
+    <span class="hljs-comment">/**
+     * result : [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>TwinCAT allows for 2 different ways of declaring Multidimensional Arrays :</p>
+				<ul>
+					<li><code>ARRAY[dimension1, dimension2, ...., dimensionN] OF &lt;type&gt;</code></li>
+					<li><code>ARRAY[dimension1] OF ARRAY[dimension2] OF ..... ARRAY[dimensionN] of &lt;type&gt;</code></li>
+				</ul>
+				<p>Regardless of the case, the <code>TcContext</code> treats both of these multidimensional arrays as multidimensional Javascript Arrays, and will process them accordingly. This allows for <code>TcSymbol.$get</code>, <code>TcSymbol.$set()</code>, <code>TcSymbol.$clear()</code> and <code>TcSymbol.$subscribe()</code> operations on any of the dimension levels.</p>
+				<a href="#tcsymbol-types" id="tcsymbol-types" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">TcSymbol Types</a></h2>
+				</a>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    numericValue : INT[<span class="hljs-number">10.</span><span class="hljs-number">.50</span>];
+    <span class="hljs-built_in">string</span>Value : STRING(<span class="hljs-number">10</span>);
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    <span class="hljs-built_in">array</span>Value : ARRAY[<span class="hljs-number">0.</span><span class="hljs-number">.4</span>] OF <span class="hljs-built_in">int</span>;
+    enumValue : MyEnum;
+
+END_VAR</code></pre><p><em>MyEnum(ENUM)</em></p>
+				<pre><code>TYPE <span class="hljs-attr">MyEnum :</span>
+(
+    <span class="hljs-attr">member1 :</span>= <span class="hljs-number">0</span>,
+    <span class="hljs-attr">member2 :</span>= <span class="hljs-number">1</span>,
+    <span class="hljs-attr">member3 :</span>= <span class="hljs-number">2</span>
+);
+END_TYPE</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext, TcSymbols } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-keyword">if</span> (context.$.MAIN.numericValue <span class="hljs-keyword">instanceof</span> TcSymbols.TcNumericSymbol) {
+        <span class="hljs-built_in">console</span>.log({ 
+            <span class="hljs-attr">min</span> : context.$.MAIN.numericValue.$lowerBorder 
+            <span class="hljs-attr">max</span> : context.$.MAIN.numericValue.$upperBorder    
+        })
+    }
+    <span class="hljs-comment">/**
+     * Output :
+     * { min : 10, max : 50 }
+     */</span>
+
+    <span class="hljs-keyword">if</span> (context.$.MAIN.stringValue <span class="hljs-keyword">instanceof</span> TcSymbols.TcStringSymbol) {
+        <span class="hljs-built_in">console</span>.log({ <span class="hljs-attr">length</span> : context.$.MAIN.stringValue.$length })
+    }
+    <span class="hljs-comment">/**
+     * Output :
+     * { length : 10 }
+     */</span>
+
+    <span class="hljs-keyword">if</span> (context.$.MAIN.foo <span class="hljs-keyword">instanceof</span> TcSymbols.TcStructureSymbol) {
+        context.$.MAIN.foo.$each(<span class="hljs-function"><span class="hljs-params">symbol</span> =&gt;</span> {
+            <span class="hljs-keyword">if</span> (symbol <span class="hljs-keyword">instanceof</span> TcSymbols.TcArraySymbol) {
+                <span class="hljs-built_in">console</span>.log({ <span class="hljs-attr">length</span> : symbol.$length })
+
+            } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (symbol <span class="hljs-keyword">instanceof</span> TcSymbols.TcEnumSymbol) {
+                <span class="hljs-built_in">console</span>.log({ <span class="hljs-attr">fields</span> : symbol.$fields })
+            }
+        })
+    }
+    <span class="hljs-comment">/**
+     * Output :
+     * { length : 5 }
+     * { fields : [&#x27;MyEnum.member1&#x27;, &#x27;MyEnum.member2&#x27;, &#x27;MyEnum.member3&#x27;]}
+     */</span>
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p><code>TcSymbol</code> provides the base foundation for <code>TcContext</code> Symbol Map creation. Each of the <code>TcSymbols</code>, has a concrete type, depending on the PLC Symbol Type. The concrete <code>TcSymbol</code> performs type checks and range checks, as well as exposes additional, type specific, functionality. The concrete types of <code>TcSymbol</code> and their unique functionality is described below.</p>
+				<p>There is no implicit type conversion done. All symbols must be provided with the exact type of value, when performing <code>TcSymbol.$set()</code> operations. The reason is to ensure there is no ambiguity when operating on the PLC.</p>
+				<a href="#tcbooleansymbol" id="tcbooleansymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcBooleanSymbol</a></h3>
+				</a>
+				<p><code>TcBooleanSymbol</code> represents the <code>BOOL</code> Data Type of the PLC, and is the most similar to the base <code>TcSymbol</code>. The only difference is, that it performs type checking abd throwing an exception of type <code>TcBindingInvalidTypeException</code>, if during the <code>TcSymbol.$set()</code> call, the value passed is not of type <code>boolean</code>.</p>
+				<a href="#tcnumericsymbol" id="tcnumericsymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcNumericSymbol</a></h3>
+				</a>
+				<p><code>TcNumericSymbol</code> represents all the numeric Data Type Symbols of the PLC, and exposes additional symbol information, in the form of <code>TcNumericSymbol.$upperBorder</code> and <code>TcNumericSymbol.$lowerBorder</code>.</p>
+				<p>When performing a <code>TcSymbol.$set()</code>, the input value is check to be of type <code>number</code>, and that the value is within the specified range. Failure to comply results in exceptions of type <code>TcBindingInvalidTypeException</code> and <code>TcBindingOutOfRangeException</code> respectfully.</p>
+				<a href="#tcstringsymbol" id="tcstringsymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcStringSymbol</a></h3>
+				</a>
+				<p><code>TcStringSymbol</code> represents <code>STRING</code> and <code>WSTRING</code> Data Types of the PLC, and exposes the <code>TcStringSymbol.$length</code> property, which states the maximum length of a string, that can be written to it.</p>
+				<p><code>TcStringSymbol</code> performs type checking on the the passed argument to <code>TcSymbol.$set()</code> to make sure it is of type <code>string</code> and does not exceed the specified length. Failure to comply results in exceptions of type <code>TcBindingInvalidTypeException</code> and <code>TcBindingOutOfRangeException</code> respectfully.</p>
+				<a href="#tcenumsymbol" id="tcenumsymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcEnumSymbol</a></h3>
+				</a>
+				<p><code>TcEnumSymbol</code> represents the <code>ENUM</code> Data Types of the PLC and provides the <code>TcEnumSymbol.$fields</code> property. This property provides a list of strings of all the acceptable inputs to the `TcSymbol.</p>
+				<p>The <code>TcEnumSymbol</code> performs type checking on the the passed argument to <code>TcSymbol.$set()</code> to make sure it is of type <code>string</code> and is part of the <code>TcEnumSymbol.$fields</code> list. Failure to comply results in exceptions of type <code>TcBindingInvalidTypeException</code> and <code>TcBindingOutOfRangeException</code> respectfully.</p>
+				<p><strong><em>IMPORTANT:</em></strong> Alias to <code>ENUM</code> is treated as its own unique type. Be aware of this.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    enumValue : MyEnum;
+
+END_VAR</code></pre><p><em>MyEnum(ENUM)</em></p>
+				<pre><code>TYPE <span class="hljs-attr">MyEnum :</span>
+(
+    <span class="hljs-attr">member1 :</span>= <span class="hljs-number">0</span>,
+    <span class="hljs-attr">member2 :</span>= <span class="hljs-number">1</span>,
+    <span class="hljs-attr">member3 :</span>= <span class="hljs-number">2</span>
+);
+END_TYPE</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext, TcEnumSymbol } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>);
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+
+    <span class="hljs-keyword">if</span> (context.$.MAIN.enumValue <span class="hljs-keyword">instanceof</span> TcSymbols.TcEnumSymbol) {
+        <span class="hljs-built_in">console</span>.log(context.$.MAIN.enumValue.$fields)
+    }
+    <span class="hljs-comment">/**
+     * Output :
+     * [&#x27;MyEnum.member1&#x27;, &#x27;MyEnum.member2&#x27;, &#x27;MyEnum.member3&#x27;]
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$set(<span class="hljs-string">&#x27;MyEnum.member3&#x27;</span>);
+    <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$get;
+    <span class="hljs-comment">/**
+     * result : &#x27;MyEnum.member3&#x27;
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$set(<span class="hljs-string">&#x27;WrongValue&#x27;</span>)
+        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err))
+    <span class="hljs-comment">/**
+     * Output :
+     *  TcBindingOutOfRangeException
+     */</span>
+
+    <span class="hljs-keyword">await</span> context.kill()
+
+})</code></pre>
+				<a href="#tcstructuresymbol" id="tcstructuresymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcStructureSymbol</a></h3>
+				</a>
+				<p><code>TcStructureSymbol</code> represents <code>Structure</code> and <code>Function_Block</code> Data Types of the PLC. As of now, no distinction between the two types is made from the pointer of view of <code>TcContext</code>. </p>
+				<p>The <code>TcStructureSymbol</code> performs a type check, to make sure any argument that is passed to <code>TcSymbol.$set()</code> is a plain Javascript Object, otherwise a <code>TcBindingInvalidTypeException</code> exception is raised. </p>
+				<p>Additionally, <code>TcStructureSymbol</code> provides <code>TcStructureSymbol.$each()</code> function, which iterates over all of its children <code>TcSymbols</code>.</p>
+				<a href="#tcarraysymbol" id="tcarraysymbol" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcArraySymbol</a></h3>
+				</a>
+				<p><code>TcArraySymbol</code> represents <code>ARRAY[...] OF &lt;type&gt;</code> Data Type of the PLC. Similarly to the <code>TcStructureSymbol</code>, the <code>TcArraySymbol</code> also provides a <code>TcArraySymbol.$each()</code> function, which iterates over all of its children <code>TcSymbols</code>.</p>
+				<p>Due to TwinCAT allowing to explicitly specify the starting index of an array, that start index can be read through the <code>TcArraySymbol.$startIndex</code> property. Lastly, <code>TcArraySymbol.$length</code> allows to read the length of the <code>TcArraySymbol</code> array.</p>
+				<p>When writing to <code>TcSymbol.$set()</code>, the <code>TcArraySymbol</code> will perform type checking on the input argument, to make sure it is of type <code>array</code>, as well as that the written array does not exceed the length of the <code>TcArraySymbol</code>. Failure to comply results in exceptions of type <code>TcBindingInvalidTypeException</code> and <code>TcBindingOutOfRangeException</code> respectfully.</p>
+				<a href="#invalidated-tcsymbol" id="invalidated-tcsymbol" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">Invalidated TcSymbol</a></h2>
+				</a>
+				<p>In a situation the where the <code>TcContext</code> was <code>reinitialized</code>, any previously stored <code>TcSymbol</code> becomes invalidated. One way to managed invalidation, is by assigning a callback to <code>TcSymbol.$onInvalidated()</code> method. This method will be called, when the <code>TcContext</code> invalidates the <code>TcSymbol</code>. Invalidation in a Symbol Map happens from the bottom-up, where children are invalidated before their parents are.</p>
+				<a href="#tcsymbol-attributes" id="tcsymbol-attributes" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">TcSymbol Attributes</a></h2>
+				</a>
+				<p>Beckhoff PLC Symbol can be marked with special attributes, which are processed by <code>TcContext</code>. These attributes alter the behavior of some <code>TcSymbols</code> and impose additional rules.</p>
+				<a href="#tcsymbol-default-attribute" id="tcsymbol-default-attribute" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcSymbol Default Attribute</a></h3>
+				</a>
+				<p>All Primitive Data Types (Not <code>Structures</code>, <code>Function_Blocks</code> or <code>Arrays</code>) support the <code>Default</code> Attribute. This attribute informs what value to write upon a call to <code>TcSymbol.$clear()</code>. If no value is specified, the value that is written, is that of a an initial value (false for <code>boolean</code>, 0 for <code>numbers</code> and empty string for <code>string</code>).</p>
+				<p><code>Structures</code>, <code>Function_Blocks</code> and <code>Arrays</code> are not affected by the <code>Default</code> attribute.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;Default&#x27;</span> := <span class="hljs-string">&#x27;true&#x27;</span>}
+    booleanValue : <span class="hljs-type">BOOL</span>;
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;Default&#x27;</span> := <span class="hljs-string">&#x27;5&#x27;</span>}
+    numericValue : <span class="hljs-type">INT</span>;
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;Default&#x27;</span> := <span class="hljs-string">&#x27;hello world&#x27;</span>}
+    stringValue : STRING(<span class="hljs-number">50</span>);
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;Default&#x27;</span> := <span class="hljs-string">&#x27;member3&#x27;</span>}
+    enumValue : MyEnum;
+
+END_VAR</code></pre><p><em>MyEnum(ENUM)</em></p>
+				<pre><code>TYPE <span class="hljs-attr">MyEnum :</span>
+(
+    <span class="hljs-attr">member1 :</span>= <span class="hljs-number">0</span>,
+    <span class="hljs-attr">member2 :</span>= <span class="hljs-number">1</span>,
+    <span class="hljs-attr">member3 :</span>= <span class="hljs-number">2</span>
+);
+END_TYPE</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//MAIN.booleanValue is set to true</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.booleanValue.$clear() 
+
+    <span class="hljs-comment">//MAIN.numericValue is set to 5</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$clear() 
+
+    <span class="hljs-comment">//MAIN.stringValue is set to &#x27;hello world&#x27;</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.stringValue.$clear() 
+
+    <span class="hljs-comment">//MAIN.enumValue is set to &#x27;MyEnum.member3&#x27;</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.enumValue.$clear() 
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#tcsymbol-readonly-attribute" id="tcsymbol-readonly-attribute" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcSymbol ReadOnly Attribute</a></h3>
+				</a>
+				<p>All Bindable Types support the <code>ReadOnly</code> Attribute. The <code>ReadOnly</code> attributes ensures that no write operation can be made to the <code>TcSymbol</code> Object, either through the <code>TcSymbol.$set()</code> method or <code>TcSymbol.$clear()</code>. If a write operation is made to a <code>ReadOnly</code> Object, a <code>TcBindingReadOnlyException</code> Exception is thrown. </p>
+				<p>If <code>TcStructureSymbol</code> or <code>TcArraySymbol</code> is marked as <code>ReadOnly</code>, then all of their children <code>TcSymbols</code> are marked as <code>ReadOnly</code> as well. When calling <code>TcSymbol.$clear()</code> on <code>TcStructureSymbol</code> Object that is not <code>ReadOnly</code>, but has children marked as <code>ReadOnly</code>, those children will be ignored during the <code>TcSymbol.$clear()</code> operation.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+VAR
+
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;ReadOnly&#x27;</span>}
+    booleanValue : <span class="hljs-type">BOOL</span>;
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;ReadOnly&#x27;</span>}
+    numericValue : <span class="hljs-type">INT</span>;
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;ReadOnly&#x27;</span>}
+    readOnlyFoo : Foo;
+    normalFoo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    {attribute <span class="hljs-string">&#x27;ReadOnly&#x27;</span>}
+    <span class="hljs-symbol">stringValue:</span> <span class="hljs-attr">STRING :</span>= <span class="hljs-string">&#x27;hello world&#x27;</span>;
+    <span class="hljs-attr">numericValue :</span> <span class="hljs-attr">BYTE :</span>= <span class="hljs-number">100</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//MAIN.booleanValue will throw exception</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.booleanValue.$clear().catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+        <span class="hljs-comment">//MAIN.booleanValue is ReadOnly. This block will execute</span>
+    })
+
+    <span class="hljs-comment">//MAIN.numericValue will throw exception</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.numericValue.$clear().catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+        <span class="hljs-comment">//MAIN.numericValue is ReadOnly. This block will execute</span>
+    })
+
+    <span class="hljs-comment">//MAIN.foo will throw exception</span>
+    <span class="hljs-keyword">await</span> context.$.MAIN.foo.$clear().catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> {
+        <span class="hljs-comment">//MAIN.foo is ReadOnly. This block will execute</span>
+    })
+
+    <span class="hljs-comment">//This will not raise an exception, however MAIN.normalFoo.stringValue will be left untouched</span>
+    <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> context.$.MAIN.normalFoo.$clear().then(<span class="hljs-function">() =&gt;</span> context.$.MAIN.normalFoo.$get);
+    <span class="hljs-comment">/**
+     * result : {
+     *      stringValue : &#x27;hello world&#x27;
+     *      numericValue : 0
+     * }
+     */</span>
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#tcsymbol-ignore-attribute" id="tcsymbol-ignore-attribute" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcSymbol Ignore Attribute</a></h3>
+				</a>
+				<p>All bindable types support the <code>Ignore</code> Attribute. The <code>Ignore</code> attributes ensures that no <code>TcSymbol</code> generation takes place by the <code>TcContext</code>. The <code>Ignore</code> attribute, when applied to <code>TcStructureSymbol</code> and <code>TcArraySymbol</code>, will also be applied to its children. If the end result of a <code>TcStructureSymbol</code> is an Object with no children, then that <code>TcStructureSymbol</code> will also be ignored.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-attr">PROGRAM</span> <span class="hljs-string">MAIN</span>
+<span class="hljs-attr">VAR</span>
+
+    <span class="hljs-attr">booleanValue</span> : <span class="hljs-string">BOOL;</span>
+    <span class="hljs-attr">numericValue</span> : <span class="hljs-string">INT;</span>
+    <span class="hljs-attr">foo</span> : <span class="hljs-string">Foo;</span>
+
+<span class="hljs-attr">END_VAR</span></code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    {attribute <span class="hljs-string">&#x27;Ignore&#x27;</span>}
+    <span class="hljs-symbol">stringValue:</span> <span class="hljs-attr">STRING :</span>= <span class="hljs-string">&#x27;hello world&#x27;</span>;
+    <span class="hljs-attr">byteValue :</span> <span class="hljs-attr">BYTE :</span>= <span class="hljs-number">100</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//booleanValue is defined </span>
+    <span class="hljs-keyword">const</span> booleanValue = context.$.MAIN.booleanValue;
+
+    <span class="hljs-comment">//numericValue is defined</span>
+    <span class="hljs-keyword">const</span> numericValue = context.$.MAIN.numericValue;
+
+    <span class="hljs-comment">//byteValue is defined </span>
+    <span class="hljs-keyword">const</span> byteValue = context.$.MAIN.foo.byteValue;
+
+    <span class="hljs-comment">//stringValue is undefined</span>
+    <span class="hljs-keyword">const</span> stringValue = context.$.MAIN.foo.stringValue;
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#tcsymbol-event-alias-attribute" id="tcsymbol-event-alias-attribute" style="color: inherit; text-decoration: none;">
+					<h3><a href="#table-of-contents">TcSymbol Event Alias Attribute</a></h3>
+				</a>
+				<p>It is possible to apply an alias to the events produced by <code>TcSymbols</code>. This way it is possible to narrow-down event handling, based on the specified alias.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    {attribute <span class="hljs-string">&#x27;onSet&#x27;</span> := <span class="hljs-string">&#x27;stringSet&#x27;</span>}
+    stringValue: STRING := <span class="hljs-string">&#x27;hello world&#x27;</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Listen for the aliased event</span>
+    context.$.MAIN.foo.stringValue.$on(<span class="hljs-string">&#x27;stringSet&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;set was aliased to stringSet : &#x27;</span>, e.data);
+    })
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>When aliasing a <code>TcSymbol&#39;s</code> event, the default event name will be replaced by the provided name, based on the Attribute Parameter. These attributes are:</p>
+				<ul>
+					<li><code>onSet</code> - will replace the <code>set</code> event</li>
+					<li><code>onGet</code> - will replace the <code>get</code> event</li>
+					<li><code>onClear</code> - will replace the <code>cleared</code> event</li>
+					<li><code>onChange</code> - will replace the <code>changed</code> event.</li>
+				</ul>
+				<a href="#tcevents" id="tcevents" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">TcEvents</a></h1>
+				</a>
+				<p>All events emitted by the components of <code>TcContext</code> inherit from <code>TcEvent</code>. The <code>TcEvent</code> in <code>TcContext</code> are designed to propagate the emitted event up from the component , all the way to the <code>TcContext</code> Object.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-function"><span class="hljs-keyword">PROGRAM</span></span> MAIN
+VAR
+
+    booleanValue : BOOL;
+    numericValue : <span class="hljs-built_in">INT</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    context.$.MAIN.booleanValue.$on(<span class="hljs-string">&#x27;set&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;set was called on MAIN.booleanValue&#x27;</span>)
+    })
+
+    context.on(<span class="hljs-string">&#x27;set&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;event propagated to context, where it was also caught&#x27;</span>)
+    })
+
+    <span class="hljs-keyword">await</span> context.$.MAIN.booleanValue.$set(<span class="hljs-literal">true</span>);
+    <span class="hljs-comment">/**
+     * When set completed output :
+     * &#x27;set was called on MAIN.booleanValue&#x27;
+     * &#x27;context also caught the event&#x27;
+     */</span>
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<p>If the <code>TcEvent</code> has been handled, and the propagation of the event is no longer wanted, a call to <code>TcEvent.stopPropagation()</code> function will stop any propagation up towards <code>TcContext</code>.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code><span class="hljs-keyword">PROGRAM</span> MAIN
+<span class="hljs-keyword">VAR</span>
+
+    foo : Foo;
+
+END_VAR</code></pre><p><em>Foo(FB)</em></p>
+				<pre><code>FUNCTION_BLOCK Foo
+VAR
+
+    {<span class="hljs-keyword">attribute</span> <span class="hljs-string">&#x27;onChange&#x27;</span> := <span class="hljs-string">&#x27;booleanChanged&#x27;</span>}
+    booleanValue: <span class="hljs-type">BOOL</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    context.$.on(<span class="hljs-string">&#x27;booleanChanged&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;caught booleanChanged event&#x27;</span>)
+        e.stopPropagation()
+    })
+
+    context.on(<span class="hljs-string">&#x27;booleanChanged&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-comment">//This will never happen, because event stopped Propagated</span>
+    })
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+})</code></pre>
+				<a href="#tcevent-list" id="tcevent-list" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">TcEvent List</a></h2>
+				</a>
+				<p>List of all events produced by the <code>tc-context</code> library. </p>
+				<table>
+					<thead>
+						<tr>
+							<th>Component</th>
+							<th>Event</th>
+							<th>Event Type</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><code>TcComponent</code></td>
+							<td><code>killed</code></td>
+							<td><code>TcContextKilledEvent</code></td>
+							<td>When the current <code>TcContext</code> is killed and no longer is valid</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>reinitialized</code></td>
+							<td><code>TcContextReinitializedEvent</code></td>
+							<td>When the current <code>TcContext</code> was rebuild and is once again valid</td>
+						</tr>
+						<tr>
+							<td><code>TcCom</code></td>
+							<td><code>connected</code></td>
+							<td><code>TcComConnectedEvent</code></td>
+							<td>When the current <code>TcContext</code> established the initial connection to the PLC</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>disconnected</code></td>
+							<td><code>TcComDisconnectedEvent</code></td>
+							<td>When the current connection to the PLC has been closed</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>sourceChanged</code></td>
+							<td><code>TcComSourceChangedEvent</code></td>
+							<td>When the PLC Code base changes during an active connection</td>
+						</tr>
+						<tr>
+							<td><code>TcSymbol</code></td>
+							<td><code>set</code></td>
+							<td><code>TcSymbolSetEvent</code></td>
+							<td>When a <code>.$set()</code> operation was completed</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>get</code></td>
+							<td><code>TcSymbolGetEvent</code></td>
+							<td>When a <code>.$get</code> operation was completed</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>cleared</code></td>
+							<td><code>TcSymbolClearedEvent</code></td>
+							<td>When a <code>.$clear()</code> operation was completed</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>changed</code></td>
+							<td><code>TcSymbolChangedEvent</code></td>
+							<td>When the symbol value changed post <code>.$subscribe()</code> operation</td>
+						</tr>
+						<tr>
+							<td><code>TcSymbolRegistry</code></td>
+							<td><code>created</code></td>
+							<td><code>TcSymbolRegistryCreatedEvent</code></td>
+							<td>When the Symbol Map has been created</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>destroyed</code></td>
+							<td><code>TcSymbolRegistryDestroyedEvent</code></td>
+							<td>When the Symbol Map has been destroyed</td>
+						</tr>
+						<tr>
+							<td><code>TcTypeRegistry</code></td>
+							<td><code>created</code></td>
+							<td><code>TcTypeRegistryCreatedEvent</code></td>
+							<td>When the Type Map has been created</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>destroyed</code></td>
+							<td><code>TcTypeRegistryDestroyedEvent</code></td>
+							<td>When the Type Map has been destroyed</td>
+						</tr>
+				</tbody></table>
+				<a href="#tcevent-hierarchy" id="tcevent-hierarchy" style="color: inherit; text-decoration: none;">
+					<h2><a href="#table-of-contents">TcEvent Hierarchy</a></h2>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Base</th>
+							<th>Component</th>
+							<th>Concrete</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><code>TcEvent</code></td>
+							<td><code>TcContextEvent</code></td>
+							<td><code>TcContextReinitializedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcContextKilledEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>TcSymbolEvent</code></td>
+							<td><code>TcSymbolGetEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcSymbolSetEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcSymbolClearedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcSymbolChangedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>TcComEvent</code></td>
+							<td><code>TcComConnectedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComDisconnectedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComSourceChangedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>TcTypeRegistryEvent</code></td>
+							<td><code>TcTypeRegistryCreatedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcTypeRegistryDestroyedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>TcSymbolRegistryEvent</code></td>
+							<td><code>TcSymbolRegistryCreatedEvent</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcSymbolRegistryDestroyedEvent</code></td>
+						</tr>
+				</tbody></table>
+				<a href="#understanding-tccontext-lifecycle" id="understanding-tccontext-lifecycle" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Understanding TcContext Lifecycle</a></h1>
+				</a>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Attach listeners for kill event...</span>
+    context.on(<span class="hljs-string">&#x27;killed&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;context was killed&#x27;</span>));
+
+    <span class="hljs-comment">//TcContext manipulation code.....</span>
+
+    <span class="hljs-comment">//Explicit TcContext kill call</span>
+    <span class="hljs-keyword">await</span> context.kill();
+
+    <span class="hljs-comment">//TcContext is no longer valid after this point, and </span>
+    <span class="hljs-comment">//any symbols produced by it should no longer be used...</span>
+
+})
+
+<span class="hljs-comment">/**
+ * Expected output:
+ * 
+ * context was killed
+ */</span></code></pre>
+				<p>During normal operation, a <code>TcContext</code> is valid from the moment it was created through <code>TcContext.create()</code> call, upon until a call to <code>TcContext.kill()</code> is made. When <code>TcContext.kill()</code>completes its task, a <code>killed</code> event of type <code>TcContextKilledEvent</code> is emitted, which can be captured.</p>
+				<p>This holds true if <strong><em>no PLC-side code changes have been made from <code>TcContext&#39;s</code> creation moment</em></strong>. If Activation of new configuration, or any Code Change takes place after <code>TcContext.create()</code> was called, then that change in <code>TcContext</code> will be detected. When detected, the <code>TcContext</code> will invalidate all the created <code>TcSymbols</code>, remove all subscriptions, clear Type and Symbol maps, kill itself, and then it will build a new map, based on the new symbols types and locations, which are present in the PLC.</p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+<span class="hljs-keyword">VAR</span>
+
+    booleanValue : <span class="hljs-keyword">BOOL</span> := <span class="hljs-literal">TRUE</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Attach listeners for kill and reinitialized events...</span>
+    context.on(<span class="hljs-string">&#x27;killed&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;context was killed&#x27;</span>));
+    context.on(<span class="hljs-string">&#x27;reinitialized&#x27;</span>, <span class="hljs-function">() =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;context was reinitialized&#x27;</span>));
+
+    <span class="hljs-comment">//Storing the symbol for use.</span>
+    <span class="hljs-keyword">const</span> booleanValue = context.$.MAIN.booleanValue; 
+
+    <span class="hljs-comment">/**
+     * Hypothetical scenario...
+     * Some code that uses the context cyclically for undefined period of time
+     * without yet reaching the .kill() call.
+     * 
+     * During this hypothetical time - the PLC Configuration was changed
+     */</span>
+
+    <span class="hljs-comment">//The line below is reached only after the PLC Configuration was changed </span>
+    <span class="hljs-comment">//in the above hypothetical scenario</span>
+    <span class="hljs-keyword">await</span> booleanValue.$set(<span class="hljs-literal">true</span>)
+        .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err));
+
+<span class="hljs-comment">/**
+ * Expected output:
+ * 
+ * context was killed
+ * context was reinitialized
+ * TcBindingIsInvalidException : 
+ *      Attempting to read an Invalidated TcBinding[\&lt;symbol name\&gt;] ( \&lt;symbol path\&gt; )...
+ */</span>
+})</code></pre>
+				<p>As seen above, if after <code>TcContext</code> was created, changes to code of the PLC have been made, the <code>TcContext</code> will detect it, and perform the <code>TcContext.kill()</code> operation automatically, upon completion of which, the <code>killed</code> event of type <code>TcContextKilledEvent</code> will be raised. Afterwards, the <code>TcContext</code> will reconnect to the PLC, and a generation and build of new Type and Symbol Maps is executed. When completed the <code>TcContext</code> will raise the <code>reinitialized</code> event of type <code>TcContextReinitializedEvent</code>. Any attempt to perform operations on any previously stored Invalidated <code>TcSymbols</code> (such as <code>booleanValue</code> in the example above), will result in an exception of type <code>TcBindingIsInvalidException</code></p>
+				<p>These events can be used, as means of updating any dependencies, which utilize the created <code>TcSymbols</code> by the <code>TcContext</code> and thus ensuring stability.</p>
+				<p><strong><em>NOTE:</em></strong> The reason for this approach, is because upon <code>TcContext</code> creation, a scan is performed, which caches all the Types and Symbols, as well as their memory locations in the PLC. These memory locations are used as a means of reading, writing, clearing and subscribing to symbols, simple or complex. When an online change is performed, there are no guaranties that the location of the previously cached symbols is same, and even if an update to it can be made, the symbol itself could be of different type. All this would result in <strong>undefined behavior</strong>. </p>
+				<p><em>MAIN(PRG)</em></p>
+				<pre><code>PROGRAM MAIN
+<span class="hljs-keyword">VAR</span>
+
+    booleanValue : <span class="hljs-keyword">BOOL</span> := <span class="hljs-literal">TRUE</span>;
+
+END_VAR</code></pre><p><em>index.js</em></p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> { TcContext } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;tc-context&#x27;</span>)
+
+<span class="hljs-comment">//Example of class which uses a symbol for its operation</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>{
+
+    <span class="hljs-comment">//Bind the symbol at construction</span>
+    <span class="hljs-keyword">constructor</span>(symbol) { <span class="hljs-built_in">this</span>.__symbol = symbol; }
+
+    <span class="hljs-comment">//Means to update the binding of the symbol</span>
+    bind(symbol) { 
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;setting new symbol&#x27;</span>)
+        <span class="hljs-built_in">this</span>.__symbol = symbol 
+    }
+
+    <span class="hljs-comment">//Method which uses the symbol</span>
+    <span class="hljs-keyword">async</span> printState() { 
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.__symbol) {
+            <span class="hljs-keyword">const</span> val = <span class="hljs-keyword">await</span> <span class="hljs-built_in">this</span>.__symbol.$get;
+            <span class="hljs-keyword">return</span> (val) ? <span class="hljs-string">&#x27;Symbol is on&#x27;</span> : <span class="hljs-string">&#x27;Symbol is off&#x27;</span>
+        }
+    }
+}
+
+TcContext.create().then(<span class="hljs-keyword">async</span> context =&gt; {
+
+    <span class="hljs-comment">//Create the object which is dependent on the TcContext&#x27;s symbol</span>
+    <span class="hljs-keyword">const</span> bar = <span class="hljs-keyword">new</span> Foo(context.$.MAIN.booleanValue);
+
+    <span class="hljs-comment">//When invalidated set the binding to null</span>
+    context.$.MAIN.booleanValue.$onInvalidated(<span class="hljs-function">() =&gt;</span> {
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;symbol was invalidated&#x27;</span>)
+        bar.bind(<span class="hljs-literal">null</span>);
+    })
+
+    context.on(<span class="hljs-string">&#x27;reinitialized&#x27;</span>, <span class="hljs-function">() =&gt;</span> { 
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&#x27;context was reinitialized&#x27;</span>)
+        bar.bind(context.$.MAIN.booleanValue);
+    })
+
+    <span class="hljs-comment">/**
+     * Hypothetical scenario...
+     * Some code that uses the context cyclically for undefined period of time
+     * without yet reaching the .kill() call.
+     * 
+     * During this hypothetical time - the PLC Configuration was changed
+     */</span>
+
+    <span class="hljs-comment">//The line below is reached only after the PLC Configuration was </span>
+    <span class="hljs-comment">//changed in the above hypothetical scenario</span>
+    <span class="hljs-keyword">await</span> bar.printState()    
+    <span class="hljs-keyword">await</span> context.kill()
+})
+
+<span class="hljs-comment">/**
+ * Expected output:
+ * 
+ * symbol was invalidated
+ * setting new symbol 
+ * context was reinitialized
+ * setting new symbol
+ * Symbol is on
+ * symbol was invalidated
+ * setting new symbol
+ */</span></code></pre>
+				<p>The example above illustrates how any components, which depends on <code>TcSymbol</code>, can use the emitted events to refresh its bindings, thus ensuring defined behavior.</p>
+				<a href="#tcexceptions" id="tcexceptions" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">TcExceptions</a></h1>
+				</a>
+				<table>
+					<thead>
+						<tr>
+							<th>Base</th>
+							<th>Component</th>
+							<th>Concrete</th>
+							<th>Description</th>
+						</tr>
+					</thead>
+					<tbody><tr>
+							<td><code>TcException</code></td>
+							<td><code>TcBindingException</code></td>
+							<td><code>TcBindingIsInvalidException</code></td>
+							<td>When operations are made on a <code>TcSymbol</code> of a killed <code>TcContext</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcBindingInvalidTypeException</code></td>
+							<td>When input type does not match <code>TcSymbol</code> type</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcBindingOutOfRangeException</code></td>
+							<td>When input data length is outside the boundaries of <code>TcSymbol</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcBindingReadOnlyException</code></td>
+							<td>When write commands are called on a Read-only <code>TcSymbol</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><code>TcComException</code></td>
+							<td><code>TcComBusyException</code></td>
+							<td>Connection to a PLC has already been made</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComConnectException</code></td>
+							<td>When an error occurred with establishing connection</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComIsInvalidException</code></td>
+							<td>When operations are made on a <code>TcCom</code> of a killed <code>TcContext</code></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComDisconnectException</code></td>
+							<td>When an error occurred with disconnecting from Target</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComChangeDetectionException</code></td>
+							<td>When an error occurred with establishing Code Change Monitoring</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComUnsubscribeException</code></td>
+							<td>When an error occurred with unsubscribing from TwinCAT Symbol</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComFromRawException</code></td>
+							<td>When an error occurred when transforming Data from Raw</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComToRawException</code></td>
+							<td>When an error occurred when transforming Data to Raw</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComSubscribeException</code></td>
+							<td>When an error occurred with subscribing to a TwinCAT Symbol</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComDataWriteException</code></td>
+							<td>When an error occurred during data writing to TwinCAT</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComDataReadException</code></td>
+							<td>When an error occurred during data reading from TwinCAT</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComTypeQueryException</code></td>
+							<td>When an error occurred with querying Type Data from TwinCAT</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComSymbolQueryException</code></td>
+							<td>When an error occurred with querying Symbol Data from TwinCAT</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td><code>TcComMethodCallException</code></td>
+							<td>When an error occurred with invoking a RPC Method over ADS</td>
+						</tr>
+				</tbody></table>
+				<a href="#documentation" id="documentation" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Documentation</a></h1>
+				</a>
+				<p>Detailed documentation of the <code>TcContext</code> code base itself can be found under the /docs/ folder in this repository.</p>
+				<a href="#acknowledgments" id="acknowledgments" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">Acknowledgments</a></h1>
+				</a>
+				<ul>
+					<li>Jussi Isotalo <a href="mailto:&#106;&#46;&#105;&#x73;&#x6f;&#x74;&#97;&#108;&#111;&#57;&#x31;&#x40;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#109;">&#106;&#46;&#105;&#x73;&#x6f;&#x74;&#97;&#108;&#111;&#57;&#x31;&#x40;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#109;</a> and his <a href="https://github.com/jisotalo/ads-client">ads-client</a> library</li>
+				</ul>
+				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
+					<h1><a href="#table-of-contents">License</a></h1>
+				</a>
+				<p><em>Licensed under MIT License.</em></p>
+				<p><em>Copyright (c) 2020 Dmitrij Trifanov <a href="mailto:&#x64;&#x2e;&#118;&#x2e;&#116;&#x72;&#x69;&#x66;&#x61;&#110;&#x6f;&#118;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;">&#x64;&#x2e;&#118;&#x2e;&#116;&#x72;&#x69;&#x66;&#x61;&#110;&#x6f;&#118;&#64;&#103;&#109;&#97;&#105;&#108;&#46;&#x63;&#111;&#109;</a></em></p>
+				<p><em>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</em></p>
+				<p><em>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</em></p>
+				<p><em>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</em></p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
