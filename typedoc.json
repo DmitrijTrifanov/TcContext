@@ -1,0 +1,10 @@
+{
+    "inputFiles": ["./src"],
+    "mode": "modules",
+    "out": "docs",
+    "includeDeclarations" : true,
+    "excludeExternals" : true,
+    "stripInternal" : true,
+    "name" : "tc-context",
+    "readme" : "README.md"
+}
