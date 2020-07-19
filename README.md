@@ -10,8 +10,6 @@
 Unofficial Node.JS Library for TwinCAT ADS Communication, designed to simplify connection to a Beckhoff PLC, and automatically generating a Symbol Map [ADS Protocol](https://infosys.beckhoff.com/english.php?content=../content/1033/tc3_ads_intro/116157835.html&id=124964102706356243) from Beckhoff for ease of read/write and subscribe data operations. 
 The `tc-context` library achieves this by fetching all the type data and initial symbol data at the moment connection and caching the memory locations of each individual symbol, as well as their parent symbol relationship. This grants the possibility to write partial structures directly into TwinCAT `Function_Blocks` and `Structures`, subscribing to complex objects, and clearing multiple Namespaces, all with single-line instructions at minimal run-time cost.
 
-![logo](./media/logo.PNG)
-
 This library is made possible, thanks to the [ads-client](https://github.com/jisotalo/ads-client) library by Jussi Isotalo <j.isotalo91@gmail.com>. If you are in search for a smaller library, focusing on ADS communication, make sure to check the[ads-client](https://github.com/jisotalo/ads-client) library.
 
 # [List of Features](#table-of-contents) 
