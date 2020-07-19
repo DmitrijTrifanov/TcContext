@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TcTypeRegistryCreatedEvent | tc-context</title>
+	<title>TcComReconnectedEvent | tc-context</title>
 	<meta name="description" content="Documentation for tc-context">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -57,10 +57,10 @@
 					<a href="../modules/_tc_event_.html">&quot;tc-event&quot;</a>
 				</li>
 				<li>
-					<a href="_tc_event_.tctyperegistrycreatedevent.html">TcTypeRegistryCreatedEvent</a>
+					<a href="_tc_event_.tccomreconnectedevent.html">TcComReconnectedEvent</a>
 				</li>
 			</ul>
-			<h1>Class TcTypeRegistryCreatedEvent</h1>
+			<h1>Class TcComReconnectedEvent</h1>
 		</div>
 	</div>
 </header>
@@ -70,7 +70,7 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Event, which is emitted, when <code>TcTypeRegistry</code> creates a Type Map</p>
+						<p>Event, which is emitted, when <code>TcCom</code> reconnects to the Target PLC</p>
 					</div>
 				</div>
 			</section>
@@ -78,10 +78,10 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<a href="_tc_event_.tctyperegistryevent.html" class="tsd-signature-type">TcTypeRegistryEvent</a>
+						<a href="_tc_event_.tccomevent.html" class="tsd-signature-type">TcComEvent</a>
 						<ul class="tsd-hierarchy">
 							<li>
-								<span class="target">TcTypeRegistryCreatedEvent</span>
+								<span class="target">TcComReconnectedEvent</span>
 							</li>
 						</ul>
 					</li>
@@ -94,23 +94,23 @@
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Accessors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#context" class="tsd-kind-icon">context</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#data" class="tsd-kind-icon">data</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#propagationstopped" class="tsd-kind-icon">propagation<wbr>Stopped</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#registry" class="tsd-kind-icon">registry</a></li>
-								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#timestamp" class="tsd-kind-icon">timestamp</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#com" class="tsd-kind-icon">com</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#context" class="tsd-kind-icon">context</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#propagationstopped" class="tsd-kind-icon">propagation<wbr>Stopped</a></li>
+								<li class="tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#timestamp" class="tsd-kind-icon">timestamp</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section tsd-is-inherited">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tctyperegistrycreatedevent.html#stoppropagation" class="tsd-kind-icon">stop<wbr>Propagation</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="_tc_event_.tccomreconnectedevent.html#stoppropagation" class="tsd-kind-icon">stop<wbr>Propagation</a></li>
 							</ul>
 						</section>
 					</div>
@@ -122,21 +122,21 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>TcType<wbr>Registry<wbr>Created<wbr>Event<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="_tc_context_.tccontext.html" class="tsd-signature-type">TcContext</a>, registry<span class="tsd-signature-symbol">: </span><a href="_tc_type_registry_.tctyperegistry.html" class="tsd-signature-type">TcTypeRegistry</a>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tc_event_.tctyperegistrycreatedevent.html" class="tsd-signature-type">TcTypeRegistryCreatedEvent</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>TcCom<wbr>Reconnected<wbr>Event<span class="tsd-signature-symbol">(</span>context<span class="tsd-signature-symbol">: </span><a href="_tc_context_.tccontext.html" class="tsd-signature-type">TcContext</a>, com<span class="tsd-signature-symbol">: </span><a href="_tc_com_.tccom.html" class="tsd-signature-type">TcCom</a>, data<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tc_event_.tccomreconnectedevent.html" class="tsd-signature-type">TcComReconnectedEvent</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from <a href="_tc_event_.tctyperegistryevent.html">TcTypeRegistryEvent</a>.<a href="_tc_event_.tctyperegistryevent.html#constructor">constructor</a></p>
+								<p>Inherited from <a href="_tc_event_.tccomevent.html">TcComEvent</a>.<a href="_tc_event_.tccomevent.html#constructor">constructor</a></p>
 								<p>Overrides <a href="_tc_event_.tcevent.html">TcEvent</a>.<a href="_tc_event_.tcevent.html#constructor">constructor</a></p>
 								<ul>
-									<li>Defined in <a href="https://github.com/DmitrijTrifanov/TcContext/blob/c3434e7/src/tc-event.ts#L289">src/tc-event.ts:289</a></li>
+									<li>Defined in <a href="https://github.com/DmitrijTrifanov/TcContext/blob/c3434e7/src/tc-event.ts#L230">src/tc-event.ts:230</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Construct the <code>TcTypeRegistryEvent</code>, which represents an event emitted from
-									a <code>TcTypeRegistry</code> Object</p>
+									<p>Construct the <code>TcComEvent</code>, which represents an event emitted from
+									a <code>TcCom</code> Object</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -150,10 +150,10 @@
 									</div>
 								</li>
 								<li>
-									<h5>registry: <a href="_tc_type_registry_.tctyperegistry.html" class="tsd-signature-type">TcTypeRegistry</a></h5>
+									<h5>com: <a href="_tc_com_.tccom.html" class="tsd-signature-type">TcCom</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<div class="lead">
-											<p>The <code>TcTypeRegistry</code>, from which this event originated</p>
+											<p>The <code>TcCom</code>, from which this event originated</p>
 										</div>
 									</div>
 								</li>
@@ -166,13 +166,36 @@
 									</div>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_tc_event_.tctyperegistrycreatedevent.html" class="tsd-signature-type">TcTypeRegistryCreatedEvent</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="_tc_event_.tccomreconnectedevent.html" class="tsd-signature-type">TcComReconnectedEvent</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group tsd-is-inherited">
 				<h2>Accessors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+					<a name="com" class="tsd-anchor"></a>
+					<h3>com</h3>
+					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> com<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tc_com_.tccom.html" class="tsd-signature-type">TcCom</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from <a href="_tc_event_.tccomevent.html">TcComEvent</a>.<a href="_tc_event_.tccomevent.html#com">com</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/DmitrijTrifanov/TcContext/blob/c3434e7/src/tc-event.ts#L247">src/tc-event.ts:247</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Access the <code>TcCom</code>, which emitted this event</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="_tc_com_.tccom.html" class="tsd-signature-type">TcCom</a></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
 					<a name="context" class="tsd-anchor"></a>
 					<h3>context</h3>
@@ -239,29 +262,6 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-					<a name="registry" class="tsd-anchor"></a>
-					<h3>registry</h3>
-					<ul class="tsd-signatures tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-						<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">get</span> registry<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_tc_type_registry_.tctyperegistry.html" class="tsd-signature-type">TcTypeRegistry</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from <a href="_tc_event_.tctyperegistryevent.html">TcTypeRegistryEvent</a>.<a href="_tc_event_.tctyperegistryevent.html#registry">registry</a></p>
-								<ul>
-									<li>Defined in <a href="https://github.com/DmitrijTrifanov/TcContext/blob/c3434e7/src/tc-event.ts#L306">src/tc-event.ts:306</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<div class="lead">
-									<p>Access the <code>TcTypeRegistry</code>, which emitted this event</p>
-								</div>
-							</div>
-							<h4 class="tsd-returns-title">Returns <a href="_tc_type_registry_.tctyperegistry.html" class="tsd-signature-type">TcTypeRegistry</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -368,9 +368,36 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tccomevent.html" class="tsd-kind-icon">Tc<wbr>Com<wbr>Event</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tccomreconnectedevent.html" class="tsd-kind-icon">Tc<wbr>Com<wbr>Reconnected<wbr>Event</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#com" class="tsd-kind-icon">com</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#context" class="tsd-kind-icon">context</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#propagationstopped" class="tsd-kind-icon">propagation<wbr>Stopped</a>
+							</li>
+							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#timestamp" class="tsd-kind-icon">timestamp</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
+								<a href="_tc_event_.tccomreconnectedevent.html#stoppropagation" class="tsd-kind-icon">stop<wbr>Propagation</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tccomsourcechangedevent.html" class="tsd-kind-icon">Tc<wbr>Com<wbr>Source<wbr>Changed<wbr>Event</a>
 					</li>
@@ -413,36 +440,9 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tcsymbolsetevent.html" class="tsd-kind-icon">Tc<wbr>Symbol<wbr>Set<wbr>Event</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-class tsd-parent-kind-module">
+					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tctyperegistrycreatedevent.html" class="tsd-kind-icon">Tc<wbr>Type<wbr>Registry<wbr>Created<wbr>Event</a>
-						<ul>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#constructor" class="tsd-kind-icon">constructor</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#context" class="tsd-kind-icon">context</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#data" class="tsd-kind-icon">data</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#propagationstopped" class="tsd-kind-icon">propagation<wbr>Stopped</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#registry" class="tsd-kind-icon">registry</a>
-							</li>
-							<li class=" tsd-kind-get-signature tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#timestamp" class="tsd-kind-icon">timestamp</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-								<a href="_tc_event_.tctyperegistrycreatedevent.html#stoppropagation" class="tsd-kind-icon">stop<wbr>Propagation</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="_tc_event_.tctyperegistrydestroyedevent.html" class="tsd-kind-icon">Tc<wbr>Type<wbr>Registry<wbr>Destroyed<wbr>Event</a>
 					</li>

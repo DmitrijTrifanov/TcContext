@@ -24,6 +24,7 @@ This library is made possible, thanks to the [ads-client](https://github.com/jis
 - Beckhoff PLC Code Change detection and Symbol Map re-generation
 - Input value validation for all types, including sub-ranged integers
 
+For detailed information, see the official [documentation](https://dmitrijtrifanov.github.io/TcContext/).
 
 # Table of contents
 
@@ -177,7 +178,11 @@ TcContext.create().then(async context => {
 
 # [Installation](#table-of-contents) 
 
-//TODO : add NPM link
+Run the following command to install package in your project:
+
+```bash
+npm install tc-context
+```
 
 Include the module in js:
 ```js
@@ -1565,6 +1570,8 @@ Component | Event | Event Type | Description
 `TcCom`| `connected` | `TcComConnectedEvent` | When the current `TcContext` established the initial connection to the PLC 
 | `disconnected` | `TcComDisconnectedEvent` | When the current connection to the PLC has been closed 
 | `sourceChanged` | `TcComSourceChangedEvent` | When the PLC Code base changes during an active connection 
+| `connectionLost` | `TcComConnectionLostEvent` | When the TcCom looses connection to the Target PLC
+| `reconnected` | `TcComReconnectedEvent` | When the TcCom reestablishes the connection to the Target PLC
 `TcSymbol` | `set` | `TcSymbolSetEvent` | When a `.$set()` operation was completed 
 | `get` | `TcSymbolGetEvent` | When a `.$get` operation was completed 
 | `cleared` | `TcSymbolClearedEvent` | When a `.$clear()` operation was completed 

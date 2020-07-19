@@ -29,7 +29,7 @@ import Debug from 'debug';
 import { Client } from 'ads-client';
 
 import { TcContext } from './tc-context';
-import { TcEmitter, TcComConnectedEvent, TcComDisconnectedEvent, TcComSourceChangedEvent } from './tc-event';
+import { TcEmitter, TcComConnectedEvent, TcComDisconnectedEvent, TcComSourceChangedEvent, TcComConnectionLostEvent, TcComReconnectedEvent } from './tc-event';
 import { TcComBusyException, 
     TcComConnectException, 
     TcComIsInvalidException, 
@@ -115,6 +115,10 @@ export class TcCom extends TcEmitter {
                 throw new TcComChangeDetectionException(this.__context, this, `TcCom encountered an error when linking Source Changes Monitoring to ${this.__settings.targetAmsNetId}:${this.__settings.targetAdsPort}`, err) });
 
         this.__log(`initialize() : Link to monitor Source Changes established with ${this.__settings.targetAmsNetId}:${this.__settings.targetAdsPort}`);
+
+        //Attach listeners for the Connection Lost and Reconnect events
+        ads.on('connectionLost', () => { this.emit('connectionLost', new TcComConnectionLostEvent(this.__context, this))})
+        ads.on('reconnect', () => { this.emit('reconnected', new TcComReconnectedEvent(this.__context, this))})
 
         //This point will only be reached if all the previous steps were successful, so
         //it is safe to store the created ADS Client and Code Change Handle
@@ -439,6 +443,20 @@ export class TcCom extends TcEmitter {
      */
     on(event : 'sourceChanged', listener : (e : TcComSourceChangedEvent) => void) : any;
 
+
+    /**
+     * Emitted when `TcCom` looses connection to the Target PLC
+     * @event sourceChanged
+     */
+    on(event : 'connectionLost', listener : (e : TcComConnectionLostEvent) => void) : any;
+
+    
+    /**
+     * Emitted when `TcCom` reconnects to the Target PLC
+     * @event sourceChanged
+     */
+    on(event : 'reconnected', listener : (e : TcComReconnectedEvent) => void) : any;
+
     on(eventName : string | symbol, listener : (e : any) => void) : any {
         super.on(eventName, listener);
         return this;
@@ -602,7 +620,8 @@ interface ADS {
     writeRawMulti(dst : TcDataPackage[]) : Promise<void>,
     readAndCacheDataTypes() : Promise<TcTypeInfoMap>,
     readAndCacheSymbols() : Promise<TcSymbolInfoMap>,
-    invokeRpcMethod(variableName : string, methodName : string, parameters : any) : Promise<{returnValue : any, outputs : any}>
+    invokeRpcMethod(variableName : string, methodName : string, parameters : any) : Promise<{returnValue : any, outputs : any}>,
+    on(eventName : string, listener : any) : void
 }
 
 /**

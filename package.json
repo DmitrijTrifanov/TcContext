@@ -1,11 +1,12 @@
 {
   "name": "tc-context",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "TwinCAT ADS Communication Library for creating an active TwinCAT Context, with automatic symbol and type mapping",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-docs" : "typedoc && touch ./docs/.nojekyll"
   },
   "keywords": [
     "twincat",
@@ -15,11 +16,19 @@
     "tc",
     "tc 2",
     "tc 3",
+    "tc2",
+    "tc3",
     "tchmi",
     "tc-hmi",
     "twincat javacript",
+    "beckhoff javascript",
+    "twincat ads",
     "ads",
+    "ads library",
+    "ads javascipt",
+    "ads javascipt library",
     "plc",
+    "iec-61131",
     "iec-61131-3",
     "61131-3",
     "codesys"
@@ -33,7 +42,7 @@
   "bugs": {
     "url": "https://github.com/DmitrijTrifanov/TcContext/issues"
   },
-  "homepage": "https://github.com/DmitrijTrifanov/TcContext#readme",
+  "homepage": "https://dmitrijtrifanov.github.io/TcContext/",
   "dependencies": {
     "@types/check-types": "^7.3.1",
     "@types/debug": "^4.1.5",
