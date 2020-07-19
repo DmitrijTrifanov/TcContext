@@ -177,7 +177,11 @@ TcContext.create().then(async context => {
 
 # [Installation](#table-of-contents) 
 
-//TODO : add NPM link
+Run the following command to install package in your project:
+
+```bash
+npm install tc-context
+```
 
 Include the module in js:
 ```js

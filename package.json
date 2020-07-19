@@ -1,11 +1,12 @@
 {
   "name": "tc-context",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "TwinCAT ADS Communication Library for creating an active TwinCAT Context, with automatic symbol and type mapping",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create-docs" : "typedoc && touch ./docs/.nojekyll"
   },
   "keywords": [
     "twincat",
