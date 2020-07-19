@@ -6,7 +6,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create-docs" : "typedoc && touch ./docs/.nojekyll"
+    "create-docs" : "typedoc --media ./img && touch ./docs/.nojekyll"
   },
   "keywords": [
     "twincat",
@@ -16,11 +16,17 @@
     "tc",
     "tc 2",
     "tc 3",
+    "tc2",
+    "tc3",
     "tchmi",
     "tc-hmi",
     "twincat javacript",
     "beckhoff javascript",
+    "twincat ads",
     "ads",
+    "ads library",
+    "ads javascipt",
+    "ads javascipt library",
     "plc",
     "iec-61131",
     "iec-61131-3",
