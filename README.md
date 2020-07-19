@@ -24,6 +24,7 @@ This library is made possible, thanks to the [ads-client](https://github.com/jis
 - Beckhoff PLC Code Change detection and Symbol Map re-generation
 - Input value validation for all types, including sub-ranged integers
 
+For detailed information, see the official [documentation](https://dmitrijtrifanov.github.io/TcContext/).
 
 # Table of contents
 
